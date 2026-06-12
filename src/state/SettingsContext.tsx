@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import { useReducedMotion } from 'motion/react'
 import { loadVault, updateVault } from '../lib/storage'
 import { primeAudio, setSfxMuted, setSfxVolume } from '../audio/sfx'
 
@@ -18,7 +17,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const initial = loadVault().settings
   const [muted, setMutedState] = useState(initial.muted)
   const [volume, setVolumeState] = useState(initial.volume)
-  const reducedMotion = !!useReducedMotion()
+  const reducedMotion = false
 
   useEffect(() => {
     primeAudio()
