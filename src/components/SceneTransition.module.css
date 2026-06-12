@@ -1,0 +1,55 @@
+.wipeHost {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bandRed,
+.bandInk {
+  position: absolute;
+  top: -20vh;
+  left: -50vw;
+  width: 200vw;
+  height: 140vh;
+}
+
+.bandRed {
+  background: var(--red);
+}
+
+.bandInk {
+  background: var(--ink);
+}
+
+/* halftone dots riding the ink band's trailing edge */
+.bandInk::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -54px;
+  width: 54px;
+  background-image: radial-gradient(circle, var(--ink) 2.6px, transparent 2.8px);
+  background-size: 14px 14px;
+}
+
+/* and a cream sliver on the red band's nose */
+.bandRed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -10px;
+  width: 10px;
+  background: var(--foam);
+}
+
+.fade {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  background: var(--paper);
+  pointer-events: none;
+}

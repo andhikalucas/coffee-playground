@@ -1,0 +1,132 @@
+/* ————— coffee playground · global styles ————— */
+
+:root {
+  /* paper & ink */
+  --paper: #f6eedd;
+  --paper-deep: #efe3cc;
+  --foam: #fff9ef;
+  --ink: #2a1b10;
+  --ink-soft: #5b4633;
+  --ink-faint: #8a7560;
+
+  /* warm accents */
+  --caramel: #c98a3d;
+  --caramel-soft: #e3b878;
+  --kraft: #d9c29a;
+  --kraft-deep: #c4a878;
+  --roast: #7a4b22;
+  --cork: #c9a06b;
+
+  /* THE red — persona moments only */
+  --red: #e0341e;
+  --red-deep: #b02513;
+
+  /* ink color options for recipe cards */
+  --ink-navy: #2b3a55;
+  --ink-forest: #3d5a3c;
+
+  /* type */
+  --font-display: 'Anton', 'Arial Narrow', sans-serif;
+  --font-hand: 'Patrick Hand', 'Segoe Print', cursive;
+  --font-script: 'Caveat', 'Bradley Hand', cursive;
+
+  /* misprint shadows */
+  --shadow-ink: 4px 5px 0 var(--ink);
+  --shadow-ink-sm: 3px 3px 0 var(--ink);
+  --shadow-soft: 3px 4px 0 rgba(42, 27, 16, 0.16);
+  --shadow-red: 5px 6px 0 var(--red);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-hand);
+  font-size: 18px;
+  line-height: 1.45;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, p, ul, ol, figure {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: rgba(224, 52, 30, 0.25);
+}
+
+:focus-visible {
+  outline: 2.5px dashed var(--red);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* hand-cut organic corners — the cheap wobble */
+.blob-a { border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; }
+.blob-b { border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px; }
+.blob-c { border-radius: 225px 18px 255px 12px / 12px 255px 18px 225px; }
+
+/* thin warm scrollbars for inner scroll areas */
+.scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: var(--caramel) transparent;
+}
+.scrollable::-webkit-scrollbar { width: 8px; height: 8px; }
+.scrollable::-webkit-scrollbar-thumb {
+  background: var(--caramel);
+  border-radius: 99px;
+}
+.scrollable::-webkit-scrollbar-track { background: transparent; }
+
+/* boot gate — app fades in once fonts are ready (class added in AppShell) */
+.boot-hidden { opacity: 0; }
+.boot-ready {
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
