@@ -92,6 +92,7 @@ function InteractiveLayer({ recipe, decorate }: { recipe: Recipe; decorate: Deco
           key={t.id}
           id={t.id}
           kind="tape"
+          label="washi tape strip"
           x={t.x}
           y={t.y}
           rotation={t.rotation}
@@ -116,6 +117,7 @@ function InteractiveLayer({ recipe, decorate }: { recipe: Recipe; decorate: Deco
             key={s.id}
             id={s.id}
             kind="sticker"
+            label={`${def.label} sticker`}
             x={s.x}
             y={s.y}
             rotation={s.rotation}
@@ -134,6 +136,7 @@ function InteractiveLayer({ recipe, decorate }: { recipe: Recipe; decorate: Deco
 interface DecorInstanceProps {
   id: string
   kind: 'sticker' | 'tape'
+  label: string
   x: number
   y: number
   rotation: number
@@ -157,7 +160,18 @@ function mutatePlacement(
 const clampFrac = (n: number) => Math.min(1.06, Math.max(-0.06, n))
 
 /** One draggable, spinnable, deletable decoration. */
-function DecorInstance({ id, kind, x, y, rotation, width, height, decorate, children }: DecorInstanceProps) {
+function DecorInstance({
+  id,
+  kind,
+  label,
+  x,
+  y,
+  rotation,
+  width,
+  height,
+  decorate,
+  children,
+}: DecorInstanceProps) {
   const play = useSfx()
   const { selectedId, onSelect, updateDecor, cardRef } = decorate
   const selected = selectedId === id
@@ -193,11 +207,15 @@ function DecorInstance({ id, kind, x, y, rotation, width, height, decorate, chil
     [width, height, id],
   )
 
-  const startRotate = (e: React.PointerEvent) => {
+  const startRotate = (e: React.PointerEvent<HTMLButtonElement>) => {
     e.preventDefault()
     e.stopPropagation()
     const el = elRef.current
+    const handleEl = e.currentTarget
     if (!el) return
+    // capture so the gesture can't strand listeners if the pointer leaves
+    // the window or the touch is cancelled
+    handleEl.setPointerCapture(e.pointerId)
     const move = (ev: PointerEvent) => {
       const rect = el.getBoundingClientRect()
       const cx = rect.left + rect.width / 2
@@ -205,12 +223,15 @@ function DecorInstance({ id, kind, x, y, rotation, width, height, decorate, chil
       const angle = (Math.atan2(ev.clientY - cy, ev.clientX - cx) * 180) / Math.PI + 90
       updateDecor((d) => mutatePlacement(d, kind, id, (p) => (p.rotation = Math.round(angle))))
     }
-    const up = () => {
-      window.removeEventListener('pointermove', move)
-      window.removeEventListener('pointerup', up)
+    const finish = (ev: PointerEvent) => {
+      if (handleEl.hasPointerCapture(ev.pointerId)) handleEl.releasePointerCapture(ev.pointerId)
+      handleEl.removeEventListener('pointermove', move)
+      handleEl.removeEventListener('pointerup', finish)
+      handleEl.removeEventListener('pointercancel', finish)
     }
-    window.addEventListener('pointermove', move)
-    window.addEventListener('pointerup', up)
+    handleEl.addEventListener('pointermove', move)
+    handleEl.addEventListener('pointerup', finish)
+    handleEl.addEventListener('pointercancel', finish)
   }
 
   const remove = () => {
@@ -257,13 +278,25 @@ function DecorInstance({ id, kind, x, y, rotation, width, height, decorate, chil
             p.y = ny
           }),
         )
+        // if the clamp made the commit a no-op, the layout effect keyed on
+        // x/y never fires — clear the drag delta here or the item floats
+        // visually away from its stored position
+        if (nx === x && ny === y) {
+          dx.set(0)
+          dy.set(0)
+        }
         play('thump')
       }}
       onTap={() => onSelect(id)}
       tabIndex={0}
       role="button"
-      aria-label={`${kind} decoration${selected ? ' (selected)' : ''}`}
+      aria-label={`${label}${selected ? ' (selected)' : ''}`}
       onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onSelect(id)
+          return
+        }
         if (e.key === 'Backspace' || e.key === 'Delete') {
           e.preventDefault()
           remove()

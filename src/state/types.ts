@@ -1,11 +1,19 @@
 export type SceneId = 'playground' | 'maker' | 'gallery'
 
-export type BrewMethod = 'v60' | 'espresso' | 'moka' | 'french-press' | 'cold-brew'
-export type PaperStyle = 'lined' | 'grid' | 'kraft' | 'dotted'
-export type InkColor = 'espresso' | 'navy' | 'red' | 'forest'
-export type IngredientKind = 'coffee' | 'water' | 'milk' | 'ice' | 'other'
-export type GrindSize = 'fine' | 'medium-fine' | 'medium' | 'medium-coarse' | 'coarse'
-export type StickerId = 'heart' | 'star' | 'steam' | 'bean' | 'ring' | 'sparkle' | 'mug'
+/* value lists double as runtime validators for data coming out of localStorage */
+export const BREW_METHODS = ['v60', 'espresso', 'moka', 'french-press', 'cold-brew'] as const
+export const PAPER_STYLES = ['lined', 'grid', 'kraft', 'dotted'] as const
+export const INK_COLORS = ['espresso', 'navy', 'red', 'forest'] as const
+export const INGREDIENT_KINDS = ['coffee', 'water', 'milk', 'ice', 'other'] as const
+export const GRIND_SIZES = ['fine', 'medium-fine', 'medium', 'medium-coarse', 'coarse'] as const
+export const STICKER_IDS_ALL = ['heart', 'star', 'steam', 'bean', 'ring', 'sparkle', 'mug'] as const
+
+export type BrewMethod = (typeof BREW_METHODS)[number]
+export type PaperStyle = (typeof PAPER_STYLES)[number]
+export type InkColor = (typeof INK_COLORS)[number]
+export type IngredientKind = (typeof INGREDIENT_KINDS)[number]
+export type GrindSize = (typeof GRIND_SIZES)[number]
+export type StickerId = (typeof STICKER_IDS_ALL)[number]
 
 export interface RecipeIngredient {
   id: string

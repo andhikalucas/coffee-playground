@@ -23,8 +23,9 @@ export async function exportRecipePng(recipe: Recipe): Promise<void> {
   const host = document.createElement('div')
   host.style.cssText = 'position:fixed;left:-12000px;top:0;pointer-events:none;'
   const stage = document.createElement('div')
-  // 20px bleed so overhanging tape and stickers survive the crop
-  stage.style.cssText = 'width:680px;padding:20px;'
+  // 120px bleed: stickers/tape are allowed to hang well past the card edge
+  // (the shelf hint even encourages it) and must survive the crop
+  stage.style.cssText = 'width:880px;padding:120px;'
   host.appendChild(stage)
   document.body.appendChild(host)
   const root = createRoot(stage)

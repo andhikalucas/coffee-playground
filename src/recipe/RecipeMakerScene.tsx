@@ -7,6 +7,7 @@ import { CardEditor } from './CardEditor'
 import { StickerShelf } from './StickerShelf'
 import { WobblyButton } from '../components/handmade/WobblyButton'
 import { WobblyFrame } from '../components/handmade/WobblyFrame'
+import { WobblyUnderline } from '../components/handmade/WobblyUnderline'
 import { showToast } from '../components/handmade/toastBus'
 import { useSfx } from '../audio/useSfx'
 import { flushVault } from '../lib/storage'
@@ -16,13 +17,12 @@ type Tab = 'write' | 'decorate'
 
 /** Write a recipe on the card, then flip to decorate mode and go wild. */
 export function RecipeMakerScene() {
-  const { draft, saveDraft, newDraft } = useRecipes()
+  const { draft, saveDraft, newDraft, updateDraft } = useRecipes()
   const { goTo } = useScene()
   const play = useSfx()
   const [tab, setTab] = useState<Tab>('write')
   const [selectedDecor, setSelectedDecor] = useState<string | null>(null)
   const cardRef = useRef<HTMLDivElement | null>(null)
-  const { updateDraft } = useRecipes()
 
   const updateDecor = (mutate: (d: RecipeDecor) => void) => updateDraft((d) => mutate(d.decor))
 
@@ -45,12 +45,11 @@ export function RecipeMakerScene() {
     <div className={styles.makerWrap}>
       <div className={styles.deskGlow} aria-hidden="true" />
 
-      <div className={styles.modeTabs} role="tablist" aria-label="card mode">
+      <div className={styles.modeTabs} role="group" aria-label="card mode">
         <WobblyButton
           seed="tab-write"
           variant={tab === 'write' ? 'ink' : 'paper'}
-          role="tab"
-          aria-selected={tab === 'write'}
+          aria-pressed={tab === 'write'}
           onClick={() => setTab('write')}
         >
           ✎ write
@@ -58,8 +57,7 @@ export function RecipeMakerScene() {
         <WobblyButton
           seed="tab-decorate"
           variant={tab === 'decorate' ? 'ink' : 'paper'}
-          role="tab"
-          aria-selected={tab === 'decorate'}
+          aria-pressed={tab === 'decorate'}
           onClick={() => setTab('decorate')}
         >
           ✿ decorate
@@ -71,7 +69,7 @@ export function RecipeMakerScene() {
           <IndexCard
             recipe={draft}
             mode={tab === 'write' ? 'edit' : 'decorate'}
-            editor={<CardEditor />}
+            editor={<CardEditor key={draft.id} />}
             cardRef={cardRef}
             decorate={{
               selectedId: selectedDecor,
@@ -89,7 +87,9 @@ export function RecipeMakerScene() {
         ) : (
           <WobblyFrame seed="write-tips" fill="var(--paper-deep)" padding={18}>
             <div className={styles.shelfPanel}>
-              <span className={styles.shelfTitle}>scribble away</span>
+              <span className={styles.shelfTitle}>
+                <WobblyUnderline seed="tips-underline">scribble away</WobblyUnderline>
+              </span>
               <p className={styles.shelfHint}>
                 everything on the card is editable — name it, tweak the numbers, swap the method stamp. the
                 ratio badge keeps count of coffee : water as you go.

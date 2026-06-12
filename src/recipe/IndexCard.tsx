@@ -91,7 +91,7 @@ function StaticCardContent({ recipe }: { recipe: Recipe }) {
               <li key={ing.id} className={styles.ingRow}>
                 <IngredientIcon kind={ing.kind} />
                 <span>
-                  {ing.amount} {ing.unit} {ingredientName(ing)}
+                  {Number.isFinite(ing.amount) ? ing.amount : '–'} {ing.unit} {ingredientName(ing)}
                 </span>
               </li>
             ))}

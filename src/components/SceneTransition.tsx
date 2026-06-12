@@ -22,6 +22,7 @@ export function SceneTransition() {
       <motion.div
         key={wipeId}
         className={styles.fade}
+        aria-hidden="true"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 1, 1, 0] }}
         transition={{ duration: 0.22, times: [0, 0.35, 0.65, 1] }}

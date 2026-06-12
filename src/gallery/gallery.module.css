@@ -82,9 +82,10 @@
   opacity: 0.92;
 }
 
-.emptyArt svg {
+.emptyArt > * {
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 .emptyText {

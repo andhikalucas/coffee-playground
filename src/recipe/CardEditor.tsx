@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import type { ChangeEvent } from 'react'
 import { useRecipes } from '../state/RecipesContext'
 import type { BrewMethod, GrindSize, IngredientKind } from '../state/types'
@@ -79,7 +79,7 @@ export function CardEditor() {
                       if (target) target.unit = target.unit === 'g' ? 'ml' : 'g'
                     })
                   }
-                  aria-label="toggle unit"
+                  aria-label={`unit: ${ing.unit} — click to toggle`}
                 >
                   {ing.unit}
                 </button>
@@ -232,24 +232,10 @@ function StepsEditor() {
             <span className={styles.stepNum} style={{ rotate: `${((i * 47) % 9) - 4}deg` }}>
               {i + 1}
             </span>
-            <textarea
-              className={styles.stepInput}
+            <StepTextarea
               value={step}
-              rows={1}
-              placeholder="then…"
-              onChange={(e) => {
-                const value = e.target.value.replace(/\n/g, ' ')
-                e.target.style.height = 'auto'
-                e.target.style.height = `${e.target.scrollHeight}px`
-                updateDraft((d) => (d.steps[i] = value))
-              }}
-              ref={(el) => {
-                if (el) {
-                  el.style.height = 'auto'
-                  el.style.height = `${el.scrollHeight}px`
-                }
-              }}
-              aria-label={`step ${i + 1}`}
+              index={i}
+              onChange={(value) => updateDraft((d) => (d.steps[i] = value))}
             />
             <span className={styles.stepControls}>
               <button
@@ -306,5 +292,37 @@ function StepsEditor() {
         </button>
       </div>
     </>
+  )
+}
+
+/** One step's textarea — autosizes whenever its value changes hands (typing, reorder, delete). */
+function StepTextarea({
+  value,
+  index,
+  onChange,
+}: {
+  value: string
+  index: number
+  onChange: (v: string) => void
+}) {
+  const ref = useRef<HTMLTextAreaElement | null>(null)
+
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${el.scrollHeight}px`
+  }, [value])
+
+  return (
+    <textarea
+      ref={ref}
+      className={styles.stepInput}
+      value={value}
+      rows={1}
+      placeholder="then…"
+      onChange={(e) => onChange(e.target.value.replace(/\n/g, ' '))}
+      aria-label={`step ${index + 1}`}
+    />
   )
 }

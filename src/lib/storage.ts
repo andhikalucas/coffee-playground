@@ -1,12 +1,17 @@
 import type { Vault } from '../state/types'
+import { normalizeVault } from '../state/normalize'
 
 /**
  * Versioned localStorage vault. One key, debounced writes, corrupt data is
  * stashed (never destroyed), and quota errors surface through a handler the
  * UI registers (a torn-paper toast).
+ *
+ * Note: the vault is cached per tab and written whole — two tabs editing at
+ * once is last-write-wins. Fine for a personal playground.
  */
 
 const KEY = 'coffee-playground:v1'
+const CORRUPT_KEY = 'coffee-playground:corrupt-latest'
 const SAVE_DEBOUNCE_MS = 400
 
 let vault: Vault | null = null
@@ -15,15 +20,6 @@ let onSaveError: ((err: unknown) => void) | null = null
 
 export function setSaveErrorHandler(handler: (err: unknown) => void) {
   onSaveError = handler
-}
-
-function freshVault(): Vault {
-  return {
-    version: 1,
-    recipes: [],
-    draft: null,
-    settings: { muted: false, volume: 0.7 },
-  }
 }
 
 /** Future schema migrations slot in here, oldest first. */
@@ -35,29 +31,25 @@ export function loadVault(): Vault {
   try {
     raw = localStorage.getItem(KEY)
     if (!raw) {
-      vault = freshVault()
+      vault = normalizeVault(null)
       return vault
     }
     let parsed: unknown = JSON.parse(raw)
     for (const migrate of migrations) parsed = migrate(parsed)
-    const candidate = parsed as Partial<Vault>
-    if (candidate?.version !== 1 || !Array.isArray(candidate.recipes)) {
-      throw new Error('unrecognized vault shape')
-    }
-    vault = {
-      ...freshVault(),
-      ...candidate,
-      settings: { ...freshVault().settings, ...candidate.settings },
-    } as Vault
+    // every loaded field is untrusted — normalize deep, never crash the app
+    vault = normalizeVault(parsed)
   } catch {
+    // unparseable: stash one copy for forensics, then start fresh and
+    // immediately overwrite the bad key so the failure can't recur each load
     if (raw) {
       try {
-        localStorage.setItem(`coffee-playground:corrupt-${Date.now()}`, raw)
+        localStorage.setItem(CORRUPT_KEY, raw)
       } catch {
         /* stash is best-effort */
       }
     }
-    vault = freshVault()
+    vault = normalizeVault(null)
+    persist()
   }
   return vault
 }
@@ -82,11 +74,21 @@ export function updateVault(mutate: (v: Vault) => void) {
   }, SAVE_DEBOUNCE_MS)
 }
 
-/** Save immediately (used right before export/unload-sensitive moments). */
+/** Save immediately (called on pagehide and after pinning a card). */
 export function flushVault() {
   if (saveTimer !== undefined) {
     window.clearTimeout(saveTimer)
     saveTimer = undefined
   }
   persist()
+}
+
+/** Wipe everything — the error boundary's "start fresh" exit. */
+export function resetVault() {
+  try {
+    localStorage.removeItem(KEY)
+  } catch {
+    /* nothing to do */
+  }
+  vault = null
 }

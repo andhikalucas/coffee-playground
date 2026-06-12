@@ -30,9 +30,18 @@ export function RadioPanel() {
   const probe = () => {
     setSource('probing')
     const probeEl = new Audio()
-    const onOk = () => setSource('local')
-    // a missing public file can come back 200 with index.html — decode failure is the real signal
-    const onFail = () => setSource('youtube')
+    let settled = false
+    const settle = (result: Source) => () => {
+      if (settled) return
+      settled = true
+      window.clearTimeout(timeout)
+      setSource(result)
+    }
+    const onOk = settle('local')
+    // a missing public file can come back 200 with index.html — decode failure is the real signal;
+    // and if nothing ever fires (stalled request), fall back to youtube rather than "tuning…" forever
+    const onFail = settle('youtube')
+    const timeout = window.setTimeout(onFail, 4000)
     probeEl.addEventListener('canplaythrough', onOk, { once: true })
     probeEl.addEventListener('error', onFail, { once: true })
     probeEl.src = LOCAL_SRC
@@ -67,8 +76,10 @@ export function RadioPanel() {
     const el = audioRef.current
     if (!el) return
     if (el.paused) {
-      void el.play()
-      setLocalPlaying(true)
+      el.play().then(
+        () => setLocalPlaying(true),
+        () => setLocalPlaying(false), // autoplay policy said no — don't lie with a pause button
+      )
     } else {
       el.pause()
       setLocalPlaying(false)
@@ -158,9 +169,10 @@ export function RadioPanel() {
                     <iframe
                       src={YT_EMBED}
                       title="Beneath the Mask — Lyn (official upload)"
-                      allow="autoplay; encrypted-media"
+                      allow="autoplay; encrypted-media; fullscreen"
                       referrerPolicy="strict-origin-when-cross-origin"
-                      sandbox="allow-scripts allow-same-origin allow-presentation"
+                      sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
+                      loading="lazy"
                     />
                   </div>
                   <div className={styles.radioHint}>

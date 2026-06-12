@@ -1,73 +1,64 @@
-# React + TypeScript + Vite
+# coffee playground ☕
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A handmade little corner of the internet for beans, brews and scribbled recipes.
+Wobbly hand-inked illustrations drift around a paper world; everything you poke
+slams open a Persona-style card; recipes get written on decoratable index cards
+and pinned to a corkboard.
 
-Currently, two official plugins are available:
+## run it
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
+pnpm dev          # → http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+`pnpm build` makes a production bundle, `pnpm preview` serves it.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## the three scenes
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **playground** — coffee things drift around (drag them anywhere; they stay put).
+  Flip to ☰ shelf for a Persona-style menu with arrow-key browsing. Click anything
+  for its story, then "use in a recipe →" pre-fills the maker.
+- **make a recipe** — write on the card (title, method, ingredients, ratio badge
+  keeps count), then ✿ decorate: stickers, washi tape, ink colors, paper styles.
+  Scroll on a selected sticker to spin it; backspace removes it.
+- **the board** — saved cards pinned at jaunty angles. Open one to edit, toss,
+  or **save as PNG** (decorations included, hanging-off-the-edge charm intact).
+
+Recipes live in your browser's localStorage — nothing leaves your machine.
+
+## the café radio 📻
+
+Bottom-right. By default it plays the official upload of *Beneath the Mask*
+(Persona 5) via a visible YouTube embed. If you own the track, drop your copy at:
+
+```
+public/audio/beneath-the-mask.mp3
+```
+
+…and the radio automatically switches to a seamless local loop with its own
+hand-drawn volume knob. (Don't deploy the mp3 publicly — that copy is for you.)
+
+## swap in your own art ✏️
+
+Every illustration goes through one registry: `src/art/registry.tsx`.
+Replace any entry with your own component — e.g. a scanned drawing:
+
+```tsx
+'moka-pot': ({ className }) => <img className={className} src="/art/my-moka.png" alt="" />,
+```
+
+…and the playground, shelf, and popups all pick it up. Stickers have a parallel
+registry at `src/art/stickers/registry.tsx`. Sizing is element-agnostic, so an
+`<img>` behaves just like the built-in SVGs.
+
+## checks
+
+```bash
+pnpm lint                           # eslint
+npx prettier --check "src/**/*"     # formatting
+pnpm dev --port 5180                # …then in another shell:
+node scripts/flow.mjs               # e2e: write → decorate → pin → reload → export
+node scripts/polish-test.mjs        # reduced-motion, keyboard, tablet checks
+node scripts/hostile-vault-test.mjs # corrupted-localStorage resilience
 ```

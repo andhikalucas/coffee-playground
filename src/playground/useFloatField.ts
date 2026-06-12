@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { motionValue, useAnimationFrame } from 'motion/react'
 import type { MotionValue } from 'motion/react'
 import { rngFrom } from '../lib/rng'
@@ -44,6 +44,9 @@ interface FieldOpts {
 export function useFloatField(items: PlaygroundItem[], opts: FieldOpts): FloatField {
   const { active, reducedMotion, width, height } = opts
 
+  // recreated only if the items array identity changes (it's a module
+  // constant today) — dragged positions reset in that case, which beats
+  // silently rendering nothing for new items
   const handles = useMemo(() => {
     const map = new Map<string, FloatHandle>()
     const cols = 3
@@ -68,17 +71,21 @@ export function useFloatField(items: PlaygroundItem[], opts: FieldOpts): FloatFi
       })
     })
     return map
-    // items catalog is static for the app's lifetime
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [items])
 
-  const usable = (axis: 'x' | 'y', size: number) =>
-    axis === 'x' ? Math.max(1, width - PAD_X * 2 - size) : Math.max(1, height - PAD_Y * 2 - size)
+  const usable = useCallback(
+    (axis: 'x' | 'y', size: number) =>
+      axis === 'x' ? Math.max(1, width - PAD_X * 2 - size) : Math.max(1, height - PAD_Y * 2 - size),
+    [width, height],
+  )
 
-  const homePx = (h: FloatHandle) => ({
-    x: PAD_X + h.home.fx * usable('x', h.size),
-    y: PAD_Y + h.home.fy * usable('y', h.size),
-  })
+  const homePx = useCallback(
+    (h: FloatHandle) => ({
+      x: PAD_X + h.home.fx * usable('x', h.size),
+      y: PAD_Y + h.home.fy * usable('y', h.size),
+    }),
+    [usable],
+  )
 
   // settle items onto their homes whenever the field can't animate
   // (first paint, reduced motion, or menu mode)
@@ -91,8 +98,7 @@ export function useFloatField(items: PlaygroundItem[], opts: FieldOpts): FloatFi
       h.y.set(p.y)
       h.rotate.set((h.phases[2] - Math.PI) * 1.6)
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, reducedMotion, width, height, handles])
+  }, [active, reducedMotion, width, height, handles, homePx])
 
   useAnimationFrame((ms) => {
     if (!active || reducedMotion || width < 10 || height < 10) return
@@ -152,8 +158,7 @@ export function useFloatField(items: PlaygroundItem[], opts: FieldOpts): FloatFi
         h.dragging = false
       },
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [handles, width, height],
+    [handles, usable],
   )
 }
 

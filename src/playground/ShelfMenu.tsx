@@ -29,9 +29,7 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
     <div className={styles.shelfWrap}>
       <ul
         className={styles.shelfList}
-        role="listbox"
         aria-label="everything on the shelf"
-        aria-activedescendant={`shelf-${active.id}`}
         onKeyDown={(e) => {
           if (e.key === 'ArrowDown') {
             e.preventDefault()
@@ -51,19 +49,14 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
         {ITEMS.map((item, i) => {
           const isActive = i === activeIdx
           return (
-            <li
-              key={item.id}
-              role="option"
-              aria-selected={isActive}
-              id={`shelf-${item.id}`}
-              style={{ marginLeft: i * 24 }}
-            >
+            <li key={item.id} style={{ marginLeft: i * 24 }}>
               <motion.button
                 ref={(el) => {
                   rowRefs.current[i] = el
                 }}
                 type="button"
                 tabIndex={isActive ? 0 : -1}
+                aria-pressed={isActive}
                 className={`${styles.shelfRow} ${isActive ? styles.shelfRowActive : ''}`}
                 animate={{ scale: isActive ? 1.16 : 1, x: isActive ? 14 : 0 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}

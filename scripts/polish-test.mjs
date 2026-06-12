@@ -37,7 +37,7 @@ console.log('keyboard: dialog opened:', dialogOpen, '| focus restored after Esc:
 // 3. shelf keyboard nav
 await kb.getByRole('button', { name: /shelf/ }).click()
 await kb.waitForTimeout(900)
-await kb.getByRole('option').first().locator('button').focus()
+await kb.locator('ul[aria-label="everything on the shelf"] button').first().focus()
 await kb.keyboard.press('ArrowDown')
 await kb.keyboard.press('ArrowDown')
 await kb.waitForTimeout(500)

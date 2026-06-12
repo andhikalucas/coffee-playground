@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useScene } from './state/SceneContext'
-import { setSaveErrorHandler } from './lib/storage'
+import { setSaveErrorHandler, flushVault } from './lib/storage'
 import { PaperGrain } from './components/handmade/PaperGrain'
 import { CoffeeStainDecor } from './components/handmade/CoffeeStainDecor'
 import { ToastHost } from './components/handmade/Toast'
@@ -36,6 +36,20 @@ export function AppShell() {
 
   useEffect(() => {
     setSaveErrorHandler(() => showToast('the board is overflowing — maybe delete a card or two?'))
+  }, [])
+
+  // never let the debounce window eat the last edits before a tab close
+  useEffect(() => {
+    const flush = () => flushVault()
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') flushVault()
+    }
+    window.addEventListener('pagehide', flush)
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => {
+      window.removeEventListener('pagehide', flush)
+      document.removeEventListener('visibilitychange', onVisibility)
+    }
   }, [])
 
   return (

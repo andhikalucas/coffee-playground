@@ -1,7 +1,8 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Recipe, RecipeSeed } from './types'
 import { emptyRecipe, uid } from './types'
+import { normalizeRecipe } from './normalize'
 import { loadVault, updateVault } from '../lib/storage'
 import { seededRange, seededPick } from '../lib/rng'
 import { PALETTE } from '../styles/tokens'
@@ -9,7 +10,6 @@ import { PALETTE } from '../styles/tokens'
 interface RecipesValue {
   recipes: Recipe[]
   draft: Recipe
-  /** true when the draft has never been touched (safe to overwrite by a seed) */
   updateDraft: (mutate: (d: Recipe) => void) => void
   newDraft: () => void
   saveDraft: () => Recipe
@@ -22,6 +22,7 @@ const RecipesContext = createContext<RecipesValue | null>(null)
 
 const PIN_COLORS = [PALETTE.red, PALETTE.caramel, PALETTE.navy, PALETTE.forest]
 
+/** JSON round-trip: cheap deep clone; NaN becomes null, which normalize cleans up on save/load. */
 function clone(r: Recipe): Recipe {
   return JSON.parse(JSON.stringify(r)) as Recipe
 }
@@ -31,33 +32,30 @@ export function RecipesProvider({ children }: { children: ReactNode }) {
   const [recipes, setRecipes] = useState<Recipe[]>(vault.recipes)
   const [draft, setDraft] = useState<Recipe>(() => vault.draft ?? emptyRecipe())
 
-  const persistDraft = useCallback((d: Recipe | null) => {
+  // persistence is reactive so state updaters stay pure (StrictMode-safe);
+  // the debounced write plus the pagehide flush cover tab closes
+  useEffect(() => {
     updateVault((v) => {
-      v.draft = d ? clone(d) : null
+      v.draft = clone(draft)
+    })
+  }, [draft])
+
+  const updateDraft = useCallback((mutate: (d: Recipe) => void) => {
+    setDraft((prev) => {
+      const next = clone(prev)
+      mutate(next)
+      next.updatedAt = Date.now()
+      return next
     })
   }, [])
 
-  const updateDraft = useCallback(
-    (mutate: (d: Recipe) => void) => {
-      setDraft((prev) => {
-        const next = clone(prev)
-        mutate(next)
-        next.updatedAt = Date.now()
-        persistDraft(next)
-        return next
-      })
-    },
-    [persistDraft],
-  )
-
   const newDraft = useCallback(() => {
-    const fresh = emptyRecipe()
-    setDraft(fresh)
-    persistDraft(fresh)
-  }, [persistDraft])
+    setDraft(emptyRecipe())
+  }, [])
 
   const saveDraft = useCallback((): Recipe => {
-    const saved = clone(draft)
+    // normalize scrubs anything the editor let through (NaN amounts → 0 etc.)
+    const saved = normalizeRecipe(clone(draft)) ?? emptyRecipe()
     saved.updatedAt = Date.now()
     if (!saved.title.trim()) saved.title = 'untitled brew'
     // corkboard presentation decided once, deterministically per recipe
@@ -65,40 +63,36 @@ export function RecipesProvider({ children }: { children: ReactNode }) {
       angle: seededRange(saved.id, -5, 5),
       color: seededPick(saved.id, PIN_COLORS),
     }
-    setRecipes((prev) => {
-      const i = prev.findIndex((r) => r.id === saved.id)
-      const next = i >= 0 ? [...prev.slice(0, i), saved, ...prev.slice(i + 1)] : [...prev, saved]
-      updateVault((v) => {
-        v.recipes = next
-      })
-      return next
+    const i = recipes.findIndex((r) => r.id === saved.id)
+    const next = i >= 0 ? [...recipes.slice(0, i), saved, ...recipes.slice(i + 1)] : [...recipes, saved]
+    setRecipes(next)
+    // mutates the in-memory vault synchronously, so a flushVault() right after
+    // this call genuinely writes the new recipe to disk
+    updateVault((v) => {
+      v.recipes = next
     })
-    const fresh = emptyRecipe()
-    setDraft(fresh)
-    persistDraft(fresh)
+    setDraft(emptyRecipe())
     return saved
-  }, [draft, persistDraft])
+  }, [draft, recipes])
 
   const editRecipe = useCallback(
     (id: string) => {
       const found = recipes.find((r) => r.id === id)
-      if (!found) return
-      const copy = clone(found)
-      setDraft(copy)
-      persistDraft(copy)
+      if (found) setDraft(clone(found))
     },
-    [recipes, persistDraft],
+    [recipes],
   )
 
-  const deleteRecipe = useCallback((id: string) => {
-    setRecipes((prev) => {
-      const next = prev.filter((r) => r.id !== id)
+  const deleteRecipe = useCallback(
+    (id: string) => {
+      const next = recipes.filter((r) => r.id !== id)
+      setRecipes(next)
       updateVault((v) => {
         v.recipes = next
       })
-      return next
-    })
-  }, [])
+    },
+    [recipes],
+  )
 
   const applySeed = useCallback(
     (seed: RecipeSeed) => {

@@ -23,7 +23,7 @@ await title.pressSequentially('saturday slow pour', { delay: 10 })
 await page.waitForTimeout(400)
 
 // decorate: add stickers + tape, change paper
-await page.getByRole('tab', { name: /decorate/ }).click()
+await page.getByRole('button', { name: /decorate/ }).click()
 await page.waitForTimeout(600)
 await page.getByRole('button', { name: 'add heart sticker' }).click()
 await page.waitForTimeout(300)
