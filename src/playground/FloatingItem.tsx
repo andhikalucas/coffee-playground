@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { ART } from '../art/registry'
 import type { PlaygroundItem } from './items'
@@ -17,6 +18,10 @@ interface FloatingItemProps {
 export function FloatingItem({ item, field, onOpen }: FloatingItemProps) {
   const play = useSfx()
   const hover = useHoverIntent(180)
+  // a real drag must not also count as a tap: motion fires onTap on pointer-up
+  // even after a drag, so we remember whether this gesture became a drag and
+  // swallow the tap if so. reset at the start of every fresh press.
+  const didDrag = useRef(false)
   const handle = field.handles.get(item.id)
   const Art = ART[item.art]
   if (!handle) return null
@@ -34,7 +39,11 @@ export function FloatingItem({ item, field, onOpen }: FloatingItemProps) {
       }}
       drag
       dragMomentum={false}
+      onPointerDown={() => {
+        didDrag.current = false
+      }}
       onDragStart={() => {
+        didDrag.current = true
         field.startDrag(item.id)
         hover.cancel()
         play('pop')
@@ -45,7 +54,14 @@ export function FloatingItem({ item, field, onOpen }: FloatingItemProps) {
       }}
       onPointerEnter={hover.onPointerEnter}
       onPointerLeave={hover.onPointerLeave}
-      onTap={() => onOpen(item.id)}
+      onTap={() => {
+        // drag just ended — that pointer-up isn't a real click, so don't open
+        if (didDrag.current) {
+          didDrag.current = false
+          return
+        }
+        onOpen(item.id)
+      }}
       role="button"
       tabIndex={0}
       aria-label={`${item.name} — open its card`}
@@ -61,9 +77,13 @@ export function FloatingItem({ item, field, onOpen }: FloatingItemProps) {
         animate={{ scale: hover.hovered ? 1.14 : 1 }}
         transition={{ type: 'spring', stiffness: 400, damping: 12 }}
       >
-        <motion.div className={styles.artBox} layoutId={`art-${item.id}`}>
+        {/* plain div, no layoutId: in float mode it has no shared-layout partner,
+            and a layoutId on a transform-positioned node inside the LayoutGroup
+            makes Motion re-project every item from the field origin on each hover
+            re-render — the "everything snaps to the top-left" glitch. */}
+        <div className={styles.artBox}>
           <Art />
-        </motion.div>
+        </div>
         <AnimatePresence>
           {hover.hovered && (
             <motion.div
