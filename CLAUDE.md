@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A hand-drawn "coffee playground" — a React 19 + TypeScript + Vite SPA with three scenes: a floating-items playground, a recipe-card maker, and a corkboard gallery. Everything is styled to look handmade: wobbly inked borders, paper grain, seeded tilt, Web Audio sound effects synthesized from oscillators (no audio files). Uses pnpm.
 
+**Before starting work, read `HANDOFF.md`** — it tracks current status, known rough edges, and the owner's pending "UI fixes wanted" checklist (unchecked items there are the active task list).
+
 ## Commands
 
 - `pnpm dev` — dev server (Vite default port; the e2e scripts expect **5180**, so run `pnpm dev --port 5180` when testing)
@@ -20,6 +22,12 @@ There is no unit-test runner. Verification is done with Playwright scripts in `s
 - `node scripts/export-test.mjs`, `node scripts/polish-test.mjs` — export and polish checks
 
 Each script collects console/page errors and prints them at the end — a run is only clean if it reports `console errors: none`.
+
+## Git workflow
+
+- **Do not commit or push automatically.** The owner reviews all changes and makes the commits/pushes themselves. Make the code changes in the working tree and stop there — do not run `git commit` or `git push` unless the owner explicitly asks for that specific action in the current request.
+- It's fine to stage nothing and leave the working tree dirty for review; report what changed so the owner can review and commit.
+- **Checkpoint per feature.** When the work is a checklist of tasks spanning different features, implement only one feature, then stop and wait for the owner to review and commit it before editing the next one. Do not start editing the next feature until the previous checkpoint is reviewed. Planning ahead is encouraged — you may design/plan the later features and be ready to implement, but hold the edits until the owner gives the go-ahead.
 
 ## Architecture
 
