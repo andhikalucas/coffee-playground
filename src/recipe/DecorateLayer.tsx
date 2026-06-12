@@ -32,7 +32,12 @@ export function DecorateLayer({ recipe, interactive, decorate }: DecorateLayerPr
     <div className={`${styles.decorLayer} ${styles.decorLayerPassive}`} aria-hidden="true">
       {recipe.decor.tapes.map((t) => (
         <div key={t.id} className={styles.decorItem} style={tapeStyle(t)}>
-          <WashiTape variant={t.variant} length={t.length} seed={t.id} style={{ position: 'static', display: 'block' }} />
+          <WashiTape
+            variant={t.variant}
+            length={t.length}
+            seed={t.id}
+            style={{ position: 'static', display: 'block' }}
+          />
         </div>
       ))}
       {recipe.decor.stickers.map((s) => {
@@ -94,7 +99,12 @@ function InteractiveLayer({ recipe, decorate }: { recipe: Recipe; decorate: Deco
           height={TAPE_HEIGHT}
           decorate={decorate}
         >
-          <WashiTape variant={t.variant} length={t.length} seed={t.id} style={{ position: 'static', display: 'block', pointerEvents: 'none' }} />
+          <WashiTape
+            variant={t.variant}
+            length={t.length}
+            seed={t.id}
+            style={{ position: 'static', display: 'block', pointerEvents: 'none' }}
+          />
         </DecorInstance>
       ))}
       {recipe.decor.stickers.map((s) => {
@@ -133,7 +143,12 @@ interface DecorInstanceProps {
   children: React.ReactNode
 }
 
-function mutatePlacement(decor: RecipeDecor, kind: 'sticker' | 'tape', id: string, fn: (p: { x: number; y: number; rotation: number }) => void) {
+function mutatePlacement(
+  decor: RecipeDecor,
+  kind: 'sticker' | 'tape',
+  id: string,
+  fn: (p: { x: number; y: number; rotation: number }) => void,
+) {
   const target =
     kind === 'sticker' ? decor.stickers.find((s) => s.id === id) : decor.tapes.find((t) => t.id === id)
   if (target) fn(target)
@@ -274,7 +289,14 @@ function DecorInstance({ id, kind, x, y, rotation, width, height, decorate, chil
       {selected && (
         <>
           <svg className={styles.selectRing} viewBox={`0 0 ${width + 24} ${height + 24}`} aria-hidden="true">
-            <path d={ring} fill="none" stroke="var(--red)" strokeWidth={2} strokeDasharray="7 6" strokeLinecap="round" />
+            <path
+              d={ring}
+              fill="none"
+              stroke="var(--red)"
+              strokeWidth={2}
+              strokeDasharray="7 6"
+              strokeLinecap="round"
+            />
           </svg>
           <button
             type="button"

@@ -29,7 +29,12 @@ export function ItemPopup({ item, onClose }: ItemPopupProps) {
   }
 
   return (
-    <PersonaPopup popupKey={`item-${item.id}`} onClose={onClose} labelledBy={`popup-title-${item.id}`} width={620}>
+    <PersonaPopup
+      popupKey={`item-${item.id}`}
+      onClose={onClose}
+      labelledBy={`popup-title-${item.id}`}
+      width={620}
+    >
       <PopupRow>
         <div id={`popup-title-${item.id}`}>
           <PersonaTitle text={item.name} seed={item.id} />

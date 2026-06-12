@@ -36,13 +36,37 @@ export function EspressoMachine({ className }: ArtProps) {
       <circle cx="74" cy="21" r="3.6" fill="var(--red)" stroke="var(--ink)" strokeWidth="2" />
       <circle cx="86" cy="20.4" r="3.6" fill="var(--paper)" stroke="var(--ink)" strokeWidth="2" />
       {/* group head + portafilter */}
-      <path d="M 52 57 L 76 56.4 L 75 66 L 53 66.6 Z" fill="var(--ink)" stroke="var(--ink)" strokeWidth="2" strokeLinejoin="round" />
-      <path d="M 56 66.5 L 72 66 L 70.5 73 L 57.5 73.4 Z" fill="var(--paper-deep)" stroke="var(--ink)" strokeWidth="2.4" strokeLinejoin="round" />
+      <path
+        d="M 52 57 L 76 56.4 L 75 66 L 53 66.6 Z"
+        fill="var(--ink)"
+        stroke="var(--ink)"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M 56 66.5 L 72 66 L 70.5 73 L 57.5 73.4 Z"
+        fill="var(--paper-deep)"
+        stroke="var(--ink)"
+        strokeWidth="2.4"
+        strokeLinejoin="round"
+      />
       {/* portafilter handle */}
-      <path d="M 75.6 60.5 Q 92 59 100 61.5" fill="none" stroke="var(--ink)" strokeWidth="4.4" strokeLinecap="round" />
+      <path
+        d="M 75.6 60.5 Q 92 59 100 61.5"
+        fill="none"
+        stroke="var(--ink)"
+        strokeWidth="4.4"
+        strokeLinecap="round"
+      />
       <circle cx="102.5" cy="62" r="4" fill="var(--roast)" stroke="var(--ink)" strokeWidth="2" />
       {/* espresso drip */}
-      <path className="art-drip" d="M 63.5 75 L 63.5 80" stroke="var(--roast)" strokeWidth="3" strokeLinecap="round" />
+      <path
+        className="art-drip"
+        d="M 63.5 75 L 63.5 80"
+        stroke="var(--roast)"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
       {/* little cup */}
       <path
         d="M 54 86 L 74 85.4 Q 73.4 96 64.4 96.4 Q 55.6 96.6 54 86 Z"

@@ -51,7 +51,13 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
         {ITEMS.map((item, i) => {
           const isActive = i === activeIdx
           return (
-            <li key={item.id} role="option" aria-selected={isActive} id={`shelf-${item.id}`} style={{ marginLeft: i * 24 }}>
+            <li
+              key={item.id}
+              role="option"
+              aria-selected={isActive}
+              id={`shelf-${item.id}`}
+              style={{ marginLeft: i * 24 }}
+            >
               <motion.button
                 ref={(el) => {
                   rowRefs.current[i] = el

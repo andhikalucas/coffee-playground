@@ -37,10 +37,7 @@ export function StarburstBadge({
   }, [seed, size])
 
   return (
-    <span
-      className={`${styles.badge} ${className ?? ''}`}
-      style={{ width: size, height: size, ...style }}
-    >
+    <span className={`${styles.badge} ${className ?? ''}`} style={{ width: size, height: size, ...style }}>
       <svg
         className={styles.badgeSvg}
         viewBox={`${-size / 2} ${-size / 2} ${size} ${size}`}

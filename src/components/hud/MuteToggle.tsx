@@ -35,7 +35,13 @@ export function MuteToggle() {
           strokeWidth="2.4"
           strokeLinejoin="round"
         />
-        <path d="M 14 25.5 Q 17 28.5 20 25.6" fill="none" stroke="var(--ink)" strokeWidth="2.4" strokeLinecap="round" />
+        <path
+          d="M 14 25.5 Q 17 28.5 20 25.6"
+          fill="none"
+          stroke="var(--ink)"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+        />
         <path d="M 16.8 2.4 L 17.2 4.4" stroke="var(--ink)" strokeWidth="2.2" strokeLinecap="round" />
         {muted && (
           <path

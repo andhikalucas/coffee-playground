@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import { useScene } from '../state/SceneContext'
 import { useSettings } from '../state/SettingsContext'
@@ -13,20 +12,15 @@ const BAND_SECS = 0.95
  * (timing lives in SceneContext's WIPE constants).
  */
 export function SceneTransition() {
-  const { phase } = useScene()
+  const { phase, wipeId } = useScene()
   const { reducedMotion } = useSettings()
-  const [runId, setRunId] = useState(0)
-
-  useEffect(() => {
-    if (phase === 'covering') setRunId((n) => n + 1)
-  }, [phase])
 
   if (phase === 'idle') return null
 
   if (reducedMotion) {
     return (
       <motion.div
-        key={runId}
+        key={wipeId}
         className={styles.fade}
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 1, 1, 0] }}
@@ -36,7 +30,7 @@ export function SceneTransition() {
   }
 
   return (
-    <div className={styles.wipeHost} key={runId} aria-hidden="true">
+    <div className={styles.wipeHost} key={wipeId} aria-hidden="true">
       <motion.div
         className={styles.bandRed}
         style={{ skewX: -12 }}

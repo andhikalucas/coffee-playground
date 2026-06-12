@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import type { CSSProperties, ReactNode, RefObject } from 'react'
-import type { Recipe, IngredientKind, RecipeIngredient } from '../state/types'
+import type { Recipe, IngredientKind } from '../state/types'
+import { ingredientName } from './ingredients'
 import { BREW_METHOD_LABELS } from '../state/types'
 import { PAPERS, INKS } from './papers'
 import { wobblyRectPath } from '../lib/wobble'
@@ -47,11 +48,13 @@ export function IndexCard({ recipe, mode, editor, decorate, cardRef, className, 
         if (cardRef) cardRef.current = el
       }}
       className={`${styles.card} ${className ?? ''}`}
-      style={{
-        ...PAPERS[recipe.decor.paper].style,
-        '--card-ink': INKS[recipe.decor.ink].value,
-        ...style,
-      } as CSSProperties}
+      style={
+        {
+          ...PAPERS[recipe.decor.paper].style,
+          '--card-ink': INKS[recipe.decor.ink].value,
+          ...style,
+        } as CSSProperties
+      }
     >
       <PaperGrain scoped />
       {border && (
@@ -120,20 +123,11 @@ export function ParamChips({ recipe }: { recipe: Recipe }) {
     <div className={styles.paramsRow}>
       {tempC !== undefined && <span className={styles.paramChip}>🌡 {tempC}°C</span>}
       {grind && <span className={styles.paramChip}>⚙ {grind} grind</span>}
-      {timeSec !== undefined && timeSec > 0 && <span className={styles.paramChip}>⏱ {formatTimeSec(timeSec)}</span>}
+      {timeSec !== undefined && timeSec > 0 && (
+        <span className={styles.paramChip}>⏱ {formatTimeSec(timeSec)}</span>
+      )}
     </div>
   )
-}
-
-export function ingredientName(ing: RecipeIngredient): string {
-  if (ing.kind === 'other') return ing.label || 'something special'
-  const names: Record<Exclude<IngredientKind, 'other'>, string> = {
-    coffee: 'coffee',
-    water: 'water',
-    milk: 'milk',
-    ice: 'ice',
-  }
-  return names[ing.kind]
 }
 
 /** Tiny hand-drawn glyphs for ingredient kinds. */
@@ -142,8 +136,23 @@ export function IngredientIcon({ kind }: { kind: IngredientKind }) {
     case 'coffee':
       return (
         <svg viewBox="0 0 24 24" className={styles.ingIcon} aria-hidden="true">
-          <ellipse cx="12" cy="12" rx="6.4" ry="8.4" transform="rotate(-16 12 12)" fill="var(--roast)" stroke="var(--ink)" strokeWidth="1.8" />
-          <path d="M 10.4 5.4 Q 14.4 11 10.8 17.6" fill="none" stroke="var(--ink)" strokeWidth="1.5" strokeLinecap="round" />
+          <ellipse
+            cx="12"
+            cy="12"
+            rx="6.4"
+            ry="8.4"
+            transform="rotate(-16 12 12)"
+            fill="var(--roast)"
+            stroke="var(--ink)"
+            strokeWidth="1.8"
+          />
+          <path
+            d="M 10.4 5.4 Q 14.4 11 10.8 17.6"
+            fill="none"
+            stroke="var(--ink)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
         </svg>
       )
     case 'water':
@@ -187,7 +196,13 @@ export function IngredientIcon({ kind }: { kind: IngredientKind }) {
     default:
       return (
         <svg viewBox="0 0 24 24" className={styles.ingIcon} aria-hidden="true">
-          <path d="M 12 4 L 13.8 9.6 L 19.6 9.8 L 15 13.4 L 16.6 19 L 12 15.6 L 7.4 19.2 L 9 13.4 L 4.4 9.9 L 10.2 9.6 Z" fill="var(--caramel-soft)" stroke="var(--ink)" strokeWidth="1.6" strokeLinejoin="round" />
+          <path
+            d="M 12 4 L 13.8 9.6 L 19.6 9.8 L 15 13.4 L 16.6 19 L 12 15.6 L 7.4 19.2 L 9 13.4 L 4.4 9.9 L 10.2 9.6 Z"
+            fill="var(--caramel-soft)"
+            stroke="var(--ink)"
+            strokeWidth="1.6"
+            strokeLinejoin="round"
+          />
         </svg>
       )
   }

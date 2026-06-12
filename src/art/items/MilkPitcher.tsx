@@ -22,13 +22,7 @@ export function MilkPitcher({ className }: ArtProps) {
         strokeLinejoin="round"
       />
       {/* milk surface */}
-      <path
-        d="M 39.6 31 Q 58 26 79.4 30.4"
-        fill="none"
-        stroke="var(--ink)"
-        strokeWidth="2.2"
-        opacity="0.6"
-      />
+      <path d="M 39.6 31 Q 58 26 79.4 30.4" fill="none" stroke="var(--ink)" strokeWidth="2.2" opacity="0.6" />
       {/* swirl on the milk */}
       <path
         d="M 54 25.6 Q 60 22.6 65 25 Q 61 27.6 57 26 Q 59.6 24 62 25"
@@ -46,7 +40,14 @@ export function MilkPitcher({ className }: ArtProps) {
         strokeLinecap="round"
       />
       {/* shine */}
-      <path d="M 48 42 Q 46.4 64 48.6 88" fill="none" stroke="var(--ink-faint)" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+      <path
+        d="M 48 42 Q 46.4 64 48.6 88"
+        fill="none"
+        stroke="var(--ink-faint)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.6"
+      />
       {/* tiny heart stamp */}
       <path
         d="M 62 62 Q 64.4 58.4 67 61 Q 69.6 63.4 62.6 69 Q 56 63.6 58.4 61 Q 60.4 58.8 62 62 Z"

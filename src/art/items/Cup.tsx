@@ -24,7 +24,15 @@ export function Cup({ className }: ArtProps) {
       {/* cup opening */}
       <ellipse cx="58" cy="43" rx="29" ry="10.4" fill="var(--foam)" stroke="var(--ink)" strokeWidth="3" />
       {/* coffee surface */}
-      <ellipse cx="58" cy="43.4" rx="23.6" ry="7.6" fill="var(--caramel-soft)" stroke="var(--ink)" strokeWidth="2" />
+      <ellipse
+        cx="58"
+        cy="43.4"
+        rx="23.6"
+        ry="7.6"
+        fill="var(--caramel-soft)"
+        stroke="var(--ink)"
+        strokeWidth="2"
+      />
       {/* latte heart */}
       <path
         d="M 57.6 41 Q 60 36.6 63.4 39.4 Q 66.6 42 58.4 48.4 Q 50.4 42.6 53.4 39.6 Q 55.8 37.4 57.6 41 Z"
@@ -42,7 +50,14 @@ export function Cup({ className }: ArtProps) {
         strokeLinecap="round"
       />
       {/* scribble on the cup */}
-      <path d="M 44 62 Q 50 57.6 56 62 Q 62 66 68 61.4" fill="none" stroke="var(--red)" strokeWidth="2" strokeLinecap="round" opacity="0.85" />
+      <path
+        d="M 44 62 Q 50 57.6 56 62 Q 62 66 68 61.4"
+        fill="none"
+        stroke="var(--red)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.85"
+      />
       {/* handle */}
       <path
         d="M 86 52 Q 99.6 52.4 98 63 Q 96.4 73 84 73.6"

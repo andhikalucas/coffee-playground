@@ -24,7 +24,15 @@ const itemVariants = {
 } as const
 
 /** A content row that joins the popup's staggered slam-in. */
-export function PopupRow({ children, className, style }: { children: ReactNode; className?: string; style?: CSSProperties }) {
+export function PopupRow({
+  children,
+  className,
+  style,
+}: {
+  children: ReactNode
+  className?: string
+  style?: CSSProperties
+}) {
   return (
     <motion.div variants={itemVariants} className={className} style={style}>
       {children}

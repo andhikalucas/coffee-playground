@@ -34,7 +34,12 @@ export function PersonaTitle({ text, size = 'lg', seed, className }: PersonaTitl
   }, [text, seed])
 
   return (
-    <span className={`${styles.title} ${SIZE_CLASS[size]} ${className ?? ''}`} aria-label={text} role="heading" aria-level={2}>
+    <span
+      className={`${styles.title} ${SIZE_CLASS[size]} ${className ?? ''}`}
+      aria-label={text}
+      role="heading"
+      aria-level={2}
+    >
       {chips.map(({ ch, chipClass, rotate, y, key }) =>
         ch === ' ' ? (
           <span key={key} className={styles.titleGap} aria-hidden="true" />

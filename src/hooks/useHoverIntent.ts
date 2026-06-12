@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-const hoverCapable =
-  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches
+const hoverCapable = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches
 
 /**
  * Delayed hover for desktop pointers — fires only after the cursor settles,

@@ -4,7 +4,8 @@ import { useRecipes } from '../state/RecipesContext'
 import type { BrewMethod, GrindSize, IngredientKind } from '../state/types'
 import { uid, BREW_METHOD_LABELS } from '../state/types'
 import { WobblyDivider } from '../components/handmade/WobblyDivider'
-import { IngredientIcon, ingredientName } from './IndexCard'
+import { IngredientIcon } from './IndexCard'
+import { ingredientName } from './ingredients'
 import { formatTimeSec, parseTimeStr } from '../lib/format'
 import { useSfx } from '../audio/useSfx'
 import styles from './recipe.module.css'
@@ -163,7 +164,9 @@ export function CardEditor() {
                 value={draft.params.tempC ?? ''}
                 placeholder="–"
                 onChange={(e) =>
-                  updateDraft((d) => (d.params.tempC = e.target.value === '' ? undefined : Number(e.target.value)))
+                  updateDraft(
+                    (d) => (d.params.tempC = e.target.value === '' ? undefined : Number(e.target.value)),
+                  )
                 }
                 aria-label="water temperature in celsius"
               />
@@ -175,7 +178,9 @@ export function CardEditor() {
                 className={styles.paramSelect}
                 value={draft.params.grind ?? ''}
                 onChange={(e) =>
-                  updateDraft((d) => (d.params.grind = (e.target.value || undefined) as GrindSize | undefined))
+                  updateDraft(
+                    (d) => (d.params.grind = (e.target.value || undefined) as GrindSize | undefined),
+                  )
                 }
                 aria-label="grind size"
               >

@@ -35,9 +35,7 @@ export async function exportRecipePng(recipe: Recipe): Promise<void> {
     })
 
     await document.fonts.ready
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    )
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
 
     const options = {
       pixelRatio: 2,

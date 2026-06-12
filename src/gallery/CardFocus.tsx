@@ -3,7 +3,7 @@ import type { Recipe } from '../state/types'
 import { PersonaPopup, PopupRow } from '../components/persona/PersonaPopup'
 import { PersonaTitle } from '../components/persona/PersonaTitle'
 import { WobblyButton } from '../components/handmade/WobblyButton'
-import { showToast } from '../components/handmade/Toast'
+import { showToast } from '../components/handmade/toastBus'
 import { IndexCard } from '../recipe/IndexCard'
 import { exportRecipePng } from '../lib/exportPng'
 import { useRecipes } from '../state/RecipesContext'
@@ -57,7 +57,12 @@ export function CardFocus({ recipe, onClose }: CardFocusProps) {
   }
 
   return (
-    <PersonaPopup popupKey={`recipe-${recipe.id}`} onClose={onClose} width={780} labelledBy={`focus-${recipe.id}`}>
+    <PersonaPopup
+      popupKey={`recipe-${recipe.id}`}
+      onClose={onClose}
+      width={780}
+      labelledBy={`focus-${recipe.id}`}
+    >
       <PopupRow>
         <div id={`focus-${recipe.id}`}>
           <PersonaTitle text={recipe.title || 'untitled brew'} size="md" seed={recipe.id} />

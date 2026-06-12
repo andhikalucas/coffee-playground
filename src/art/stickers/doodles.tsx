@@ -17,7 +17,13 @@ export function HeartDoodle({ className }: DoodleProps) {
         strokeWidth="2.4"
         strokeLinejoin="round"
       />
-      <path d="M 17 16 Q 14.6 17.6 14.6 20.6" fill="none" stroke="var(--foam)" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M 17 16 Q 14.6 17.6 14.6 20.6"
+        fill="none"
+        stroke="var(--foam)"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
   )
 }
@@ -54,7 +60,14 @@ export function SteamDoodle({ className }: DoodleProps) {
         strokeLinecap="round"
         opacity="0.75"
       />
-      <path d="M 38 36 Q 35 30.6 38.6 25.6" fill="none" stroke="var(--card-ink, var(--ink))" strokeWidth="2.6" strokeLinecap="round" opacity="0.5" />
+      <path
+        d="M 38 36 Q 35 30.6 38.6 25.6"
+        fill="none"
+        stroke="var(--card-ink, var(--ink))"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        opacity="0.5"
+      />
     </svg>
   )
 }
@@ -70,7 +83,13 @@ export function BeanSticker({ className }: DoodleProps) {
           strokeWidth="2.6"
           strokeLinejoin="round"
         />
-        <path d="M 22.6 10.6 Q 29 17.6 23.6 24 Q 18.6 30.6 25 36.6" fill="none" stroke="var(--ink)" strokeWidth="2.2" strokeLinecap="round" />
+        <path
+          d="M 22.6 10.6 Q 29 17.6 23.6 24 Q 18.6 30.6 25 36.6"
+          fill="none"
+          stroke="var(--ink)"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+        />
       </g>
     </svg>
   )
@@ -125,10 +144,34 @@ export function MugDoodle({ className }: DoodleProps) {
         strokeWidth="2.6"
         strokeLinejoin="round"
       />
-      <path d="M 33 19 Q 40 19.6 39 26 Q 38 31.6 31.6 31" fill="none" stroke="var(--ink)" strokeWidth="2.6" strokeLinecap="round" />
-      <path d="M 14.4 19.6 Q 22 22 30 19.4" fill="none" stroke="var(--roast)" strokeWidth="2.2" strokeLinecap="round" />
-      <path d="M 18 9 Q 16.6 6 19 4" fill="none" stroke="var(--ink-faint)" strokeWidth="2" strokeLinecap="round" />
-      <path d="M 25 9.6 Q 26.6 6.6 24.6 3.6" fill="none" stroke="var(--ink-faint)" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M 33 19 Q 40 19.6 39 26 Q 38 31.6 31.6 31"
+        fill="none"
+        stroke="var(--ink)"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 14.4 19.6 Q 22 22 30 19.4"
+        fill="none"
+        stroke="var(--roast)"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 18 9 Q 16.6 6 19 4"
+        fill="none"
+        stroke="var(--ink-faint)"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 25 9.6 Q 26.6 6.6 24.6 3.6"
+        fill="none"
+        stroke="var(--ink-faint)"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
   )
 }

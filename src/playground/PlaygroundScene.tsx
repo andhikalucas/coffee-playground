@@ -71,9 +71,7 @@ export function PlaygroundScene() {
         </button>
       </div>
 
-      {mode === 'float' && (
-        <p className={styles.hint}>drag things around · click anything for its story</p>
-      )}
+      {mode === 'float' && <p className={styles.hint}>drag things around · click anything for its story</p>}
 
       <AnimatePresence>
         {focused && <ItemPopup item={focused} onClose={() => setFocusedId(null)} />}

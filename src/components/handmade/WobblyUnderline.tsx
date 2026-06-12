@@ -32,7 +32,12 @@ export function WobblyUnderline({
     <span ref={ref} className={`${styles.underlineWrap} ${className ?? ''}`}>
       {children}
       {d && (
-        <svg className={styles.underlineSvg} viewBox={`0 0 ${width} 10`} preserveAspectRatio="none" aria-hidden="true">
+        <svg
+          className={styles.underlineSvg}
+          viewBox={`0 0 ${width} 10`}
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
           <motion.path
             d={d}
             fill="none"

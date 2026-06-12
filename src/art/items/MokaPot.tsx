@@ -34,7 +34,13 @@ export function MokaPot({ className }: ArtProps) {
       <path d="M 54 31 L 52.4 57.2" stroke="var(--ink)" strokeWidth="1.7" opacity="0.55" />
       <path d="M 65 30.6 L 67.6 56.8" stroke="var(--ink)" strokeWidth="1.7" opacity="0.55" />
       {/* waist */}
-      <path d="M 41 58 L 79 57 L 77 65.4 L 43.4 66.2 Z" fill="var(--paper-deep)" stroke="var(--ink)" strokeWidth="2.6" strokeLinejoin="round" />
+      <path
+        d="M 41 58 L 79 57 L 77 65.4 L 43.4 66.2 Z"
+        fill="var(--paper-deep)"
+        stroke="var(--ink)"
+        strokeWidth="2.6"
+        strokeLinejoin="round"
+      />
       {/* lower chamber */}
       <path
         d="M 43.6 66.2 L 76.8 65.4 L 82 99 Q 82.4 102.6 78 102.8 L 43 103.6 Q 38.6 103.6 39.2 99.6 Z"

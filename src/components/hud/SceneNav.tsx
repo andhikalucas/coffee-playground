@@ -24,7 +24,12 @@ export function SceneNav() {
   const clips = useMemo(
     () =>
       TABS.map((t, i) =>
-        tornEdgePolygon(120, 44, { bottom: true, left: true, right: true }, { seed: id + t.id + i, tooth: 7, depth: 4 }),
+        tornEdgePolygon(
+          120,
+          44,
+          { bottom: true, left: true, right: true },
+          { seed: id + t.id + i, tooth: 7, depth: 4 },
+        ),
       ),
     [id],
   )

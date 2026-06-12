@@ -10,7 +10,10 @@ const FOCUSABLE =
 export function useFocusTrap<T extends HTMLElement>(onClose: () => void) {
   const ref = useRef<T | null>(null)
   const onCloseRef = useRef(onClose)
-  onCloseRef.current = onClose
+
+  useEffect(() => {
+    onCloseRef.current = onClose
+  }, [onClose])
 
   useEffect(() => {
     const node = ref.current

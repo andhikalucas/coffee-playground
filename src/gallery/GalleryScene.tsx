@@ -24,9 +24,7 @@ export function GalleryScene() {
             <div className={styles.emptyArt}>
               <CupArt />
             </div>
-            <p className={styles.emptyText}>
-              nothing pinned yet — the board is hungry for your first recipe
-            </p>
+            <p className={styles.emptyText}>nothing pinned yet — the board is hungry for your first recipe</p>
             <WobblyButton seed="empty-make" variant="red" onClick={() => goTo('maker')}>
               make the first one →
             </WobblyButton>

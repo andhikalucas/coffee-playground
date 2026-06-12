@@ -54,6 +54,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- hooks co-located with their provider is the idiom here
 export function useSettings(): SettingsValue {
   const v = useContext(SettingsContext)
   if (!v) throw new Error('useSettings outside SettingsProvider')

@@ -61,7 +61,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, p, ul, ol, figure {
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure {
   margin: 0;
 }
 
@@ -98,24 +105,37 @@ svg {
 }
 
 /* hand-cut organic corners — the cheap wobble */
-.blob-a { border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; }
-.blob-b { border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px; }
-.blob-c { border-radius: 225px 18px 255px 12px / 12px 255px 18px 225px; }
+.blob-a {
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+}
+.blob-b {
+  border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px;
+}
+.blob-c {
+  border-radius: 225px 18px 255px 12px / 12px 255px 18px 225px;
+}
 
 /* thin warm scrollbars for inner scroll areas */
 .scrollable {
   scrollbar-width: thin;
   scrollbar-color: var(--caramel) transparent;
 }
-.scrollable::-webkit-scrollbar { width: 8px; height: 8px; }
+.scrollable::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 .scrollable::-webkit-scrollbar-thumb {
   background: var(--caramel);
   border-radius: 99px;
 }
-.scrollable::-webkit-scrollbar-track { background: transparent; }
+.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
 
 /* boot gate — app fades in once fonts are ready (class added in AppShell) */
-.boot-hidden { opacity: 0; }
+.boot-hidden {
+  opacity: 0;
+}
 .boot-ready {
   opacity: 1;
   transition: opacity 0.45s ease;

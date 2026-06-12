@@ -128,6 +128,7 @@ export function RecipesProvider({ children }: { children: ReactNode }) {
   return <RecipesContext.Provider value={value}>{children}</RecipesContext.Provider>
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- hooks co-located with their provider is the idiom here
 export function useRecipes(): RecipesValue {
   const v = useContext(RecipesContext)
   if (!v) throw new Error('useRecipes outside RecipesProvider')

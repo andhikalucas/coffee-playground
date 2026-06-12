@@ -8,7 +8,11 @@ import styles from './recipe.module.css'
 export function RatioBadge({ ingredients }: { ingredients: RecipeIngredient[] }) {
   const ratio = brewRatio(ingredients)
   return (
-    <div className={styles.ratioWrap} aria-live="polite" aria-label={ratio ? `brew ratio ${ratio}` : undefined}>
+    <div
+      className={styles.ratioWrap}
+      aria-live="polite"
+      aria-label={ratio ? `brew ratio ${ratio}` : undefined}
+    >
       <AnimatePresence>
         {ratio && (
           <motion.div

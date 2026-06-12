@@ -1,27 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { TornEdge } from './TornEdge'
+import { setToastEmitter } from './toastBus'
 import styles from './handmade.module.css'
-
-let emit: ((msg: string) => void) | null = null
-
-/** Show a torn-paper notice from anywhere (storage errors, saves, exports). */
-export function showToast(msg: string) {
-  emit?.(msg)
-}
 
 export function ToastHost() {
   const [msg, setMsg] = useState<string | null>(null)
   const timer = useRef<number | undefined>(undefined)
 
   useEffect(() => {
-    emit = (m: string) => {
+    setToastEmitter((m: string) => {
       setMsg(m)
       if (timer.current !== undefined) window.clearTimeout(timer.current)
       timer.current = window.setTimeout(() => setMsg(null), 3200)
-    }
+    })
     return () => {
-      emit = null
+      setToastEmitter(null)
       if (timer.current !== undefined) window.clearTimeout(timer.current)
     }
   }, [])

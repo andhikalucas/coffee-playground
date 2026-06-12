@@ -20,7 +20,13 @@ export function Kettle({ className }: ArtProps) {
         strokeLinecap="round"
       />
       {/* lid */}
-      <path d="M 50 43 Q 64 36.6 80 42" fill="var(--paper-deep)" stroke="var(--ink)" strokeWidth="2.8" strokeLinejoin="round" />
+      <path
+        d="M 50 43 Q 64 36.6 80 42"
+        fill="var(--paper-deep)"
+        stroke="var(--ink)"
+        strokeWidth="2.8"
+        strokeLinejoin="round"
+      />
       <circle cx="65" cy="38.6" r="3.4" fill="var(--roast)" stroke="var(--ink)" strokeWidth="2" />
       {/* body */}
       <path
@@ -31,7 +37,14 @@ export function Kettle({ className }: ArtProps) {
         strokeLinejoin="round"
       />
       {/* shine */}
-      <path d="M 50 54 Q 48 68 50.6 82" fill="none" stroke="var(--ink-faint)" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+      <path
+        d="M 50 54 Q 48 68 50.6 82"
+        fill="none"
+        stroke="var(--ink-faint)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.6"
+      />
       {/* gooseneck spout */}
       <path
         d="M 44 58 Q 22 56 18.6 38 Q 17.4 30 24 25"
@@ -67,8 +80,20 @@ export function Kettle({ className }: ArtProps) {
         strokeLinecap="round"
       />
       {/* temp scribble */}
-      <path d="M 60 64 Q 66 60 71 64 Q 66 68 60 64 Z" fill="none" stroke="var(--red)" strokeWidth="1.8" opacity="0.85" />
-      <path d="M 64 73 L 67.4 73" stroke="var(--red)" strokeWidth="1.8" strokeLinecap="round" opacity="0.85" />
+      <path
+        d="M 60 64 Q 66 60 71 64 Q 66 68 60 64 Z"
+        fill="none"
+        stroke="var(--red)"
+        strokeWidth="1.8"
+        opacity="0.85"
+      />
+      <path
+        d="M 64 73 L 67.4 73"
+        stroke="var(--red)"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        opacity="0.85"
+      />
     </svg>
   )
 }

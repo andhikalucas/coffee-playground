@@ -137,8 +137,8 @@ export function StickerShelf({ onAdded }: StickerShelfProps) {
         </div>
 
         <p className={styles.shelfHint}>
-          drag things into place · scroll on a selected sticker to spin it · backspace removes it · they can hang
-          off the edge, that's the charm
+          drag things into place · scroll on a selected sticker to spin it · backspace removes it · they can
+          hang off the edge, that's the charm
         </p>
       </div>
     </WobblyFrame>

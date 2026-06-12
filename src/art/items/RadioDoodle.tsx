@@ -22,7 +22,16 @@ export function RadioDoodle({ className, playing = false }: RadioDoodleProps) {
       <ellipse cx="22" cy="31" rx="9.4" ry="9.8" fill="var(--paper)" stroke="var(--ink)" strokeWidth="2.4" />
       <ellipse cx="22" cy="31" rx="4.6" ry="5" fill="none" stroke="var(--ink)" strokeWidth="1.8" />
       {/* dial */}
-      <rect x="38" y="22" width="14" height="7" rx="2.5" fill="var(--foam)" stroke="var(--ink)" strokeWidth="2" />
+      <rect
+        x="38"
+        y="22"
+        width="14"
+        height="7"
+        rx="2.5"
+        fill="var(--foam)"
+        stroke="var(--ink)"
+        strokeWidth="2"
+      />
       <path d="M 44.5 22.5 L 44.5 28.5" stroke="var(--red)" strokeWidth="2" />
       {/* knobs */}
       <circle cx="41" cy="38.5" r="3.4" fill="var(--roast)" stroke="var(--ink)" strokeWidth="1.8" />
@@ -31,11 +40,29 @@ export function RadioDoodle({ className, playing = false }: RadioDoodleProps) {
       {playing && (
         <g fill="var(--ink)" stroke="none">
           <g>
-            <path d="M 10 8 Q 10 4 14 4.5 L 14 1.5 L 16 1.2 L 16 8" fill="none" stroke="var(--ink)" strokeWidth="1.6" strokeLinecap="round">
-              <animateTransform attributeName="transform" type="translate" values="0 2; 0 -2; 0 2" dur="1.6s" repeatCount="indefinite" />
+            <path
+              d="M 10 8 Q 10 4 14 4.5 L 14 1.5 L 16 1.2 L 16 8"
+              fill="none"
+              stroke="var(--ink)"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            >
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                values="0 2; 0 -2; 0 2"
+                dur="1.6s"
+                repeatCount="indefinite"
+              />
             </path>
             <circle cx="10" cy="8.6" r="2">
-              <animateTransform attributeName="transform" type="translate" values="0 2; 0 -2; 0 2" dur="1.6s" repeatCount="indefinite" />
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                values="0 2; 0 -2; 0 2"
+                dur="1.6s"
+                repeatCount="indefinite"
+              />
             </circle>
           </g>
         </g>

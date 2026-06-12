@@ -41,8 +41,15 @@ export function RadioPanel() {
 
   const toggleOpen = () => {
     play('click')
-    if (!open && source === 'unknown') probe()
-    setOpen((o) => !o)
+    if (open) {
+      // stashing the radio always silences it
+      audioRef.current?.pause()
+      setLocalPlaying(false)
+      setOpen(false)
+      return
+    }
+    if (source === 'unknown') probe()
+    setOpen(true)
   }
 
   useEffect(() => {
@@ -50,13 +57,11 @@ export function RadioPanel() {
     if (el) el.volume = volume
   }, [volume, localPlaying, source, open])
 
-  // closing the panel always silences the radio
+  // unmount safety: never leave a detached element playing
   useEffect(() => {
-    if (!open) {
-      audioRef.current?.pause()
-      setLocalPlaying(false)
-    }
-  }, [open])
+    const el = audioRef
+    return () => el.current?.pause()
+  }, [])
 
   const toggleLocal = () => {
     const el = audioRef.current
@@ -99,10 +104,20 @@ export function RadioPanel() {
             exit={{ y: 30, scale: 0.85, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 380, damping: 24 }}
           >
-            <WobblyFrame seed="radio-panel" fill="var(--paper-deep)" padding={16} className={styles.radioPanel}>
+            <WobblyFrame
+              seed="radio-panel"
+              fill="var(--paper-deep)"
+              padding={16}
+              className={styles.radioPanel}
+            >
               <div className={styles.radioHeader}>
                 <span className={styles.radioTitle}>café radio</span>
-                <WobblyButton seed="radio-close" variant="ghost" onClick={toggleOpen} aria-label="stash the radio">
+                <WobblyButton
+                  seed="radio-close"
+                  variant="ghost"
+                  onClick={toggleOpen}
+                  aria-label="stash the radio"
+                >
                   stash it
                 </WobblyButton>
               </div>
@@ -115,7 +130,11 @@ export function RadioPanel() {
                   {/* user-supplied copy — seamless loop, our own knobs */}
                   <audio ref={audioRef} src={LOCAL_SRC} loop preload="auto" />
                   <div className={styles.radioControls}>
-                    <WobblyButton seed="radio-play" variant={localPlaying ? 'ink' : 'red'} onClick={toggleLocal}>
+                    <WobblyButton
+                      seed="radio-play"
+                      variant={localPlaying ? 'ink' : 'red'}
+                      onClick={toggleLocal}
+                    >
                       {localPlaying ? '❚❚ pause' : '▶ play'}
                     </WobblyButton>
                     <input

@@ -3,8 +3,7 @@
   inset: 70px 26px 26px;
   background:
     radial-gradient(rgba(122, 75, 34, 0.16) 1.6px, transparent 1.8px),
-    radial-gradient(rgba(255, 249, 239, 0.1) 1.2px, transparent 1.4px),
-    var(--cork);
+    radial-gradient(rgba(255, 249, 239, 0.1) 1.2px, transparent 1.4px), var(--cork);
   background-size:
     13px 13px,
     17px 17px;
