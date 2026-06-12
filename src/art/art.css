@@ -1,0 +1,73 @@
+/* little lives inside the illustrations — CSS-driven so the global
+   prefers-reduced-motion rule silences them automatically */
+
+.art-steam {
+  animation: artSteam 2.8s ease-in-out infinite;
+}
+
+.art-steam-2 {
+  animation: artSteam 2.8s ease-in-out 1.3s infinite;
+}
+
+@keyframes artSteam {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  35% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.art-drip {
+  animation: artDrip 1.7s ease-in infinite;
+}
+
+@keyframes artDrip {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  25% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(13px);
+  }
+}
+
+.art-crank {
+  transform-box: fill-box;
+  transform-origin: 12% 88%;
+  animation: artCrank 3.6s ease-in-out infinite;
+}
+
+@keyframes artCrank {
+  0%,
+  100% {
+    transform: rotate(-7deg);
+  }
+  50% {
+    transform: rotate(11deg);
+  }
+}
+
+.art-swirl {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: artSwirl 7s linear infinite;
+}
+
+@keyframes artSwirl {
+  to {
+    transform: rotate(360deg);
+  }
+}
