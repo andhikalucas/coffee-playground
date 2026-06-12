@@ -1,8 +1,10 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { ART } from '../art/registry'
 import { ITEMS } from './items'
 import { PersonaTitle } from '../components/persona/PersonaTitle'
+import { rngFrom } from '../lib/rng'
 import { useSfx } from '../audio/useSfx'
 import styles from './playground.module.css'
 
@@ -17,6 +19,22 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
   const rowRefs = useRef<Array<HTMLButtonElement | null>>([])
   const active = ITEMS[activeIdx]
   const Art = ART[active.art]
+
+  // each row gets a stable, seeded personality: a slight tilt, a touch of size
+  // variation, and an asymmetric horizontal nudge — so the column reads hand-set
+  // rather than a ruler-straight diagonal.
+  const variances = useMemo(
+    () =>
+      ITEMS.map((item) => {
+        const rand = rngFrom(item.id + ':shelf')
+        return {
+          rot: (rand() * 2 - 1) * 3.4, // ±3.4° tilt
+          sizeMul: 0.93 + rand() * 0.14, // 0.93–1.07, kept subtle so titles stay legible
+          dx: (rand() * 2 - 1) * 44, // ±44px asymmetric offset
+        }
+      }),
+    [],
+  )
 
   const moveTo = (idx: number) => {
     const next = (idx + ITEMS.length) % ITEMS.length
@@ -48,8 +66,13 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
       >
         {ITEMS.map((item, i) => {
           const isActive = i === activeIdx
+          const v = variances[i]
           return (
-            <li key={item.id} style={{ marginLeft: i * 24 }}>
+            <li
+              key={item.id}
+              className={styles.shelfItem}
+              style={{ transform: `translateX(${v.dx}px) rotate(${v.rot}deg) skewX(-8deg)` }}
+            >
               <motion.button
                 ref={(el) => {
                   rowRefs.current[i] = el
@@ -58,7 +81,8 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
                 tabIndex={isActive ? 0 : -1}
                 aria-pressed={isActive}
                 className={`${styles.shelfRow} ${isActive ? styles.shelfRowActive : ''}`}
-                animate={{ scale: isActive ? 1.16 : 1, x: isActive ? 14 : 0 }}
+                style={{ '--row-mul': v.sizeMul } as CSSProperties}
+                animate={{ scale: isActive ? 1.14 : 1, x: isActive ? 18 : 0 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 onPointerEnter={() => {
                   if (i !== activeIdx) {

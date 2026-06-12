@@ -115,7 +115,7 @@
   inset: 0;
   display: grid;
   grid-template-columns: minmax(330px, 46%) 1fr;
-  align-items: center;
+  align-items: stretch;
   padding: 90px 4vw 70px 5vw;
   gap: 2vw;
 }
@@ -124,24 +124,33 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  transform: rotate(-7deg);
+  transform: rotate(-6deg);
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  max-height: 100%;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 4px;
+  height: 100%;
+}
+
+/* anchored to the right; rotation pivots from that edge so the column stays put */
+.shelfItem {
+  transform-origin: right center;
 }
 
 .shelfRow {
   position: relative;
   display: inline-flex;
   align-items: center;
-  padding: 6px 22px 7px 16px;
+  padding: 4px 20px 8px 16px;
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 2.5vw, 1.7rem);
-  letter-spacing: 0.02em;
+  /* big enough to fill the column top-to-bottom; --row-mul adds subtle per-row size variance */
+  font-size: calc(clamp(1.7rem, 4.4vw, 3.1rem) * var(--row-mul, 1));
+  line-height: 1;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--ink);
-  transform: skewX(-10deg);
   transition: color 80ms linear;
 }
 
@@ -151,7 +160,7 @@
 
 .chip {
   position: absolute;
-  inset: -2px -10px;
+  inset: -3px -13px;
   background: var(--red);
   clip-path: polygon(
     3% 18%,
@@ -179,6 +188,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 18px;
   text-align: center;
 }
