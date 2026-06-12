@@ -1,40 +1,73 @@
 /* ————— coffee playground · global styles ————— */
 
-:root {
+/* Tailwind v4, CSS-first. Preflight (Tailwind's base reset) is deliberately NOT
+   imported — this project keeps its own resets below, so adopting Tailwind adds
+   utilities + the @theme token system without shifting anything visually. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* The design tokens ARE the Tailwind theme now: colours generate bg-/text-/border-
+   utilities (e.g. bg-foam, text-ink, border-red), fonts generate font-display /
+   font-hand / font-script. @theme also emits each as a :root custom property, so
+   existing var(--font-display) references keep working. */
+@theme {
   /* paper & ink */
-  --paper: #f6eedd;
-  --paper-deep: #efe3cc;
-  --foam: #fff9ef;
-  --ink: #2a1b10;
-  --ink-soft: #5b4633;
-  --ink-faint: #6d5a47; /* AA on cream for the small hint text */
+  --color-paper: #f6eedd;
+  --color-paper-deep: #efe3cc;
+  --color-foam: #fff9ef;
+  --color-ink: #2a1b10;
+  --color-ink-soft: #5b4633;
+  --color-ink-faint: #6d5a47; /* AA on cream for the small hint text */
 
   /* warm accents */
-  --caramel: #c98a3d;
-  --caramel-soft: #e3b878;
-  --kraft: #d9c29a;
-  --kraft-deep: #c4a878;
-  --roast: #7a4b22;
-  --cork: #c9a06b;
+  --color-caramel: #c98a3d;
+  --color-caramel-soft: #e3b878;
+  --color-kraft: #d9c29a;
+  --color-kraft-deep: #c4a878;
+  --color-roast: #7a4b22;
+  --color-cork: #c9a06b;
 
   /* THE red — persona moments only */
-  --red: #e0341e;
-  --red-deep: #b02513;
+  --color-red: #e0341e;
+  --color-red-deep: #b02513;
 
-  /* ink color options for recipe cards */
-  --ink-navy: #2b3a55;
-  --ink-forest: #3d5a3c;
+  /* ink colour options for recipe cards */
+  --color-ink-navy: #2b3a55;
+  --color-ink-forest: #3d5a3c;
 
   /* type */
   --font-display: 'Anton', 'Arial Narrow', sans-serif;
   --font-hand: 'Patrick Hand', 'Segoe Print', cursive;
   --font-script: 'Caveat', 'Bradley Hand', cursive;
+}
+
+/* Back-compat aliases: the original short token names (var(--ink), var(--foam),
+   …) keep resolving while the CSS modules migrate to utilities module-by-module.
+   Remove an alias once nothing references it. Shadows stay plain custom props. */
+:root {
+  --paper: var(--color-paper);
+  --paper-deep: var(--color-paper-deep);
+  --foam: var(--color-foam);
+  --ink: var(--color-ink);
+  --ink-soft: var(--color-ink-soft);
+  --ink-faint: var(--color-ink-faint);
+  --caramel: var(--color-caramel);
+  --caramel-soft: var(--color-caramel-soft);
+  --kraft: var(--color-kraft);
+  --kraft-deep: var(--color-kraft-deep);
+  --roast: var(--color-roast);
+  --cork: var(--color-cork);
+  --red: var(--color-red);
+  --red-deep: var(--color-red-deep);
+  --ink-navy: var(--color-ink-navy);
+  --ink-forest: var(--color-ink-forest);
 
   /* misprint shadows */
-  --shadow-ink: 4px 5px 0 var(--ink);
-  --shadow-ink-sm: 3px 3px 0 var(--ink);
+  --shadow-ink: 4px 5px 0 var(--color-ink);
+  --shadow-ink-sm: 3px 3px 0 var(--color-ink);
   --shadow-soft: 3px 4px 0 rgba(42, 27, 16, 0.16);
-  --shadow-red: 5px 6px 0 var(--red);
+  --shadow-red: 5px 6px 0 var(--color-red);
 }
 
 *,

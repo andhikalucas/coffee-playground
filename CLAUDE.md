@@ -45,7 +45,7 @@ Provider stack in `src/App.tsx`: `SettingsProvider → RecipesProvider → Scene
 
 ### Conventions
 
-- Styling is CSS Modules per feature (`*.module.css`) plus `src/styles/global.css` for tokens/CSS vars.
+- Styling is a **Tailwind v4 + CSS Modules hybrid** (migration in progress, module-by-module). Tailwind (CSS-first, wired via `@tailwindcss/vite`) handles layout/spacing/color/typography utilities; the design tokens live as `@theme` in `src/styles/global.css` (colours → `bg-*`/`text-*`/`border-*`, fonts → `font-display`/`font-hand`/`font-script`). **Preflight is intentionally not imported** — `global.css` keeps the project's own base resets, so adopting Tailwind changed nothing visually. The original short token names (`var(--ink)`, `var(--foam)`, …) still resolve via aliases in `global.css`. CSS Modules (`*.module.css`) are retained for bespoke hand-drawn styling (wobble `border-radius`, clip-path jags, `mix-blend-mode`, slider thumbs, `@keyframes`) that doesn't map cleanly to utilities — don't force those into arbitrary-value classes. `src/styles/tokens.ts` still mirrors the palette for SVG fills.
 - Sticker/tape placements store x/y as fractions of the card (0..1) so cards scale anywhere (`src/state/types.ts`).
 - Hooks co-located with their provider (with a documented eslint-disable for react-refresh/only-export-components) is the established idiom in `src/state/`.
 - Interactive elements get descriptive aria-labels (e.g. "v60 dripper — open its card"); the Playwright scripts target them by role/label, so keep labels stable or update the scripts.

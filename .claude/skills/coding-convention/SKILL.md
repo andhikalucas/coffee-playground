@@ -48,9 +48,15 @@ surrounding code's style; build new UI from the existing primitives, not plain b
   `RecipesProvider` does (`useEffect(() => updateVault(v => { v.draft = clone(draft) }), [draft])`).
   Deep-clone before mutating drafts (`JSON.parse(JSON.stringify(...))` — `clone()` in
   `RecipesContext.tsx`).
-- **Styling = CSS Modules per feature** (`*.module.css`) + `src/styles/global.css` for
-  tokens/CSS vars. `src/styles/tokens.ts` mirrors the palette for SVG fills — keep the two
-  in sync if you add a color.
+- **Styling = Tailwind v4 + CSS Modules hybrid** (migration in progress). Use Tailwind
+  utilities for layout/spacing/color/typography; the tokens are the Tailwind `@theme` in
+  `src/styles/global.css` (`bg-foam`, `text-ink`, `border-red`, `font-display/-hand/-script`).
+  **Preflight is deliberately not imported** — `global.css` owns the base resets; don't add
+  it (it would shift the whole look). Keep genuinely bespoke styling (wobble `border-radius`,
+  clip-path jags, `mix-blend-mode`, `::-webkit-slider-thumb`, `@keyframes`) in CSS Modules /
+  `@layer` — don't force it into `[arbitrary-value]` utilities. The old short token names
+  (`var(--ink)`, …) still resolve via aliases in `global.css`. `src/styles/tokens.ts` mirrors
+  the palette for SVG fills — keep it in sync if you add a colour.
 - **Geometry as fractions.** Sticker/tape placements store `x`/`y` as fractions of the
   card (0..1) so cards scale anywhere (`src/state/types.ts`). New placement data follows
   the same rule.
