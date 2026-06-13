@@ -81,7 +81,7 @@ export function RecipeMakerScene() {
         </div>
       </div>
 
-      <aside className={`${styles.sideCol} scrollable`}>
+      <aside className={`${styles.sideCol}`}>
         {tab === 'decorate' ? (
           <StickerShelf onAdded={setSelectedDecor} />
         ) : (
