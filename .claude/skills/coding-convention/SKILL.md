@@ -156,21 +156,24 @@ hard-won. Don't shrink the bleed or drop the double render.
 - Uncontrolled editors are reset by remounting with a `key` (`<CardEditor key={draft.id} />`)
   so switching drafts doesn't leak stale field values.
 
-## 8. Radio / `<iframe>` hardening
+## 8. Radio (`src/components/hud/RadioPanel.tsx` + `src/audio/youtubeAudio.ts`)
 
-In `src/components/hud/RadioPanel.tsx`:
+The radio drives an **invisible YouTube player via the IFrame Player API** purely as an
+audio source — a deliberate choice for this personal app (it trades YouTube's "keep the
+player visible" guidance for a music-player feel; fine here, reconsider if ever deployed
+publicly). When changing it:
 
-- **Probe has a settle-once guard + a 4s timeout fallback.** The local-file probe can hang
-  (a stalled request fires neither `canplaythrough` nor `error`), so a single `settled`
-  flag and a `setTimeout(onFail, 4000)` keep it from sitting on "tuning…" forever. Any
-  similar media/network probe needs the same guard.
-- **Handle the `play()` promise both ways.** `el.play().then(ok, fail)` — if autoplay
-  policy blocks it, set the paused UI state; never show a pause button when audio isn't
-  actually playing.
-- **The YouTube `<iframe>` is sandboxed deliberately:** `referrerPolicy="strict-origin-when-cross-origin"`,
-  a minimal `sandbox="…"` allowlist, and `loading="lazy"`. Don't broaden the sandbox or
-  drop the referrer policy without a concrete reason. The player must stay **visible** while
-  playing — that's YouTube ToS; don't "fix" it by hiding the iframe.
+- **Create the player node imperatively** inside a React-stable wrapper. The IFrame API
+  swaps the target element for its own `<iframe>`, so letting React own that node causes
+  reconciliation crashes (removeChild on a detached node). The wrapper stays empty as far
+  as React is concerned.
+- **Loop a single track** by replaying on `PlayerState.ENDED` (`seekTo(0)` + `playVideo()`),
+  not the `loop`/`playlist` params (unreliable with `loadVideoById`).
+- **The record label** is a single static image at `public/thumbnail.jpg` (`RECORD_THUMB`),
+  centered and spinning inside the disc. Keep the `<img>` `onError` fallback. Only the disc
+  spins — the spindle hole and red misprint shadow sit on a non-rotating wrapper.
+- The player is kept on-screen but `opacity-0` (not `display:none`) so the browser doesn't
+  throttle its audio.
 
 ## 9. General web-safety
 
