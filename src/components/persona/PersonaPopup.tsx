@@ -6,7 +6,6 @@ import { jagFor } from './shapes'
 import { HalftoneBackdrop } from './HalftoneBackdrop'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 import { useSfx } from '../../audio/useSfx'
-import styles from './persona.module.css'
 
 interface PersonaPopupProps {
   /** stable identity — decides which jagged cut this popup wears */
@@ -79,11 +78,11 @@ export function PersonaPopup({
   )
 
   return createPortal(
-    <div className={styles.overlay}>
+    <div className="fixed inset-0 z-80 grid place-items-center p-7">
       <HalftoneBackdrop seed={popupKey} onClick={handleClose} />
       <motion.div
         ref={trapRef}
-        className={styles.panelGroup}
+        className="relative w-[min(92vw,var(--popup-width,560px))] outline-none"
         style={{ '--popup-width': `${width}px` } as CSSProperties}
         role="dialog"
         aria-modal="true"
@@ -101,36 +100,41 @@ export function PersonaPopup({
         transition={{ type: 'spring', stiffness: 480, damping: 26, mass: 1 }}
       >
         <motion.div
-          className={styles.layerRed}
+          className="absolute inset-0 translate-x-3 translate-y-3.5 rotate-[1.5deg] scale-[1.03] bg-red"
           style={{ clipPath: shapes.panel }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { delay: 0, duration: 0.1 } }}
         />
         <motion.div
-          className={styles.layerFlash}
+          className="absolute inset-0 -translate-x-1.25 -translate-y-1.5 rotate-[-0.8deg] bg-foam"
           style={{ clipPath: shapes.panel }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { delay: 0.045, duration: 0.1 } }}
         />
         <motion.div
-          className={styles.layerInk}
+          className="absolute inset-0 bg-ink"
           style={{ clipPath: shapes.panel }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { delay: 0.045, duration: 0.1 } }}
         />
         <motion.div
-          className={styles.layerContent}
+          className="relative m-4.25 rotate-[-1.2deg] bg-paper px-9 pt-8.5 pb-7.5"
           style={{ clipPath: shapes.content }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { delay: 0.09, duration: 0.12 } }}
         >
           {showClose && (
-            <button type="button" className={styles.closeChip} onClick={handleClose} aria-label="close">
+            <button
+              type="button"
+              className="absolute right-3 top-2.5 z-2 grid h-9.5 w-9.5 place-items-center bg-ink font-display text-[1.05rem] text-foam clip-persona-chip hover:bg-red"
+              onClick={handleClose}
+              aria-label="close"
+            >
               ✕
             </button>
           )}
           <motion.div
-            className={styles.contentInner}
+            className="flex flex-col gap-3.5"
             initial="hidden"
             animate="show"
             variants={{ show: { transition: { staggerChildren: 0.05, delayChildren: 0.18 } } }}

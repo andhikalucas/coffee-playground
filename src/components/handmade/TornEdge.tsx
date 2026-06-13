@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { tornEdgePolygon } from '../../lib/wobble'
 import type { TornEdges } from '../../lib/wobble'
 import { useElementSize } from '../../hooks/useElementSize'
-import styles from './handmade.module.css'
+import { cn } from '../../lib/cn'
 
 interface TornEdgeProps {
   children?: ReactNode
@@ -40,10 +40,10 @@ export function TornEdge({
   )
 
   const core = (
-    <div ref={ref} className={`${styles.torn} ${className ?? ''}`} style={{ clipPath, ...style }}>
+    <div ref={ref} className={cn('relative', className)} style={{ clipPath, ...style }}>
       {children}
     </div>
   )
 
-  return shadow ? <div className={styles.tornShadow}>{core}</div> : core
+  return shadow ? <div className="drop-shadow-[3px_4px_0_rgba(42,27,16,0.18)]">{core}</div> : core
 }

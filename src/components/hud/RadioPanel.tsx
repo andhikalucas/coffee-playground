@@ -7,7 +7,6 @@ import { WobblyButton } from '../handmade/WobblyButton'
 import { useSfx } from '../../audio/useSfx'
 import { loadYouTubeApi } from '../../audio/youtubeAudio'
 import type { YTPlayer } from '../../audio/youtubeAudio'
-import styles from './hud.module.css'
 
 const SONG = 'beneath the mask'
 
@@ -126,7 +125,7 @@ export function RadioPanel() {
   }
 
   return (
-    <div className={styles.corner} style={{ right: 20, bottom: 20 }}>
+    <div className="fixed z-65" style={{ right: 20, bottom: 20 }}>
       {/* invisible audio engine — a real YouTube player, kept transparent + parked
           bottom-left so the browser keeps it alive; driven via the IFrame API */}
       <div
@@ -141,7 +140,7 @@ export function RadioPanel() {
           <motion.button
             key="collapsed"
             type="button"
-            className={`${styles.radioCollapsed} blob-a relative`}
+            className="relative grid h-14 w-16 place-items-center border-[2.5px] border-solid border-ink bg-paper-deep shadow-ink-sm blob-a"
             style={{ rotate: 2 }}
             initial={{ scale: 0.6, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -242,7 +241,7 @@ export function RadioPanel() {
                   </div>
 
                   <input
-                    className={`${styles.volume} mb-3`}
+                    className="coffee-range mb-3"
                     type="range"
                     min={0}
                     max={1}

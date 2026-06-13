@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import type { CSSProperties } from 'react'
 import { wobblyEllipsePath } from '../../lib/wobble'
 import { rngFrom } from '../../lib/rng'
-import styles from './handmade.module.css'
+import { cn } from '../../lib/cn'
 
 interface CoffeeStainDecorProps {
   size?: number
@@ -40,7 +40,7 @@ export function CoffeeStainDecor({
 
   return (
     <svg
-      className={`${styles.stain} ${className ?? ''}`}
+      className={cn('pointer-events-none absolute', className)}
       width={size}
       height={size}
       viewBox={`0 0 ${size} ${size}`}

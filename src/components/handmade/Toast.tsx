@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { TornEdge } from './TornEdge'
 import { setToastEmitter } from './toastBus'
-import styles from './handmade.module.css'
 
 export function ToastHost() {
   const [msg, setMsg] = useState<string | null>(null)
@@ -21,7 +20,11 @@ export function ToastHost() {
   }, [])
 
   return (
-    <div className={styles.toastWrap} role="status" aria-live="polite">
+    <div
+      className="pointer-events-none fixed bottom-6.5 left-1/2 z-90"
+      role="status"
+      aria-live="polite"
+    >
       <AnimatePresence>
         {msg && (
           <motion.div
@@ -32,7 +35,7 @@ export function ToastHost() {
             transition={{ type: 'spring', stiffness: 420, damping: 24 }}
           >
             <TornEdge edges="all" tooth={8} depth={4} shadow>
-              <div className={styles.toastInner}>{msg}</div>
+              <div className="bg-paper-deep px-6.5 py-3 font-hand text-[1.02rem] text-ink">{msg}</div>
             </TornEdge>
           </motion.div>
         )}

@@ -6,7 +6,10 @@ import { STICKERS } from '../art/stickers/registry'
 import { WashiTape } from '../components/handmade/WashiTape'
 import { wobblyEllipsePath } from '../lib/wobble'
 import { useSfx } from '../audio/useSfx'
-import styles from './recipe.module.css'
+import { cn } from '../lib/cn'
+
+// stickers render an <svg> child that should fill the item box
+const DECOR_ITEM = 'absolute touch-none [&_svg]:h-full [&_svg]:w-full'
 
 export interface DecorateProps {
   selectedId: string | null
@@ -29,9 +32,9 @@ export function DecorateLayer({ recipe, interactive, decorate }: DecorateLayerPr
     return <InteractiveLayer recipe={recipe} decorate={decorate} />
   }
   return (
-    <div className={`${styles.decorLayer} ${styles.decorLayerPassive}`} aria-hidden="true">
+    <div className="pointer-events-none absolute inset-0 z-5" aria-hidden="true">
       {recipe.decor.tapes.map((t) => (
-        <div key={t.id} className={styles.decorItem} style={tapeStyle(t)}>
+        <div key={t.id} className={DECOR_ITEM} style={tapeStyle(t)}>
           <WashiTape
             variant={t.variant}
             length={t.length}
@@ -43,7 +46,7 @@ export function DecorateLayer({ recipe, interactive, decorate }: DecorateLayerPr
       {recipe.decor.stickers.map((s) => {
         const Doodle = STICKERS[s.stickerId].Component
         return (
-          <div key={s.id} className={styles.decorItem} style={stickerStyle(s)}>
+          <div key={s.id} className={DECOR_ITEM} style={stickerStyle(s)}>
             <Doodle />
           </div>
         )
@@ -82,7 +85,7 @@ function tapeStyle(t: TapePlacement) {
 function InteractiveLayer({ recipe, decorate }: { recipe: Recipe; decorate: DecorateProps }) {
   return (
     <div
-      className={styles.decorLayer}
+      className="absolute inset-0 z-5"
       onPointerDown={(e) => {
         if (e.target === e.currentTarget) decorate.onSelect(null)
       }}
@@ -246,7 +249,7 @@ function DecorInstance({
   return (
     <motion.div
       ref={elRef}
-      className={`${styles.decorItem} ${styles.decorItemInteractive}`}
+      className={cn(DECOR_ITEM, 'cursor-grab active:cursor-grabbing')}
       style={{
         left: `${x * 100}%`,
         top: `${y * 100}%`,
@@ -321,7 +324,11 @@ function DecorInstance({
       {children}
       {selected && (
         <>
-          <svg className={styles.selectRing} viewBox={`0 0 ${width + 24} ${height + 24}`} aria-hidden="true">
+          <svg
+            className="pointer-events-none absolute -inset-3 h-[calc(100%+24px)] w-[calc(100%+24px)] overflow-visible"
+            viewBox={`0 0 ${width + 24} ${height + 24}`}
+            aria-hidden="true"
+          >
             <path
               d={ring}
               fill="none"
@@ -333,14 +340,19 @@ function DecorInstance({
           </svg>
           <button
             type="button"
-            className={styles.rotateHandle}
+            className="absolute left-1/2 top-[-34px] z-3 -ml-2.75 grid h-5.5 w-5.5 place-items-center rounded-[50%_45%_55%_50%] border-[2.2px] border-solid border-ink bg-foam text-[0.7rem] cursor-grab"
             onPointerDown={startRotate}
             aria-label="rotate (drag me, or scroll on the sticker)"
             title="drag to rotate"
           >
             ↻
           </button>
-          <button type="button" className={styles.deleteChip} onClick={remove} aria-label="remove decoration">
+          <button
+            type="button"
+            className="absolute -right-6.5 -top-6.5 z-3 grid h-6 w-6 place-items-center bg-ink text-[0.78rem] text-foam clip-delete-chip hover:bg-red"
+            onClick={remove}
+            aria-label="remove decoration"
+          >
             ✕
           </button>
         </>

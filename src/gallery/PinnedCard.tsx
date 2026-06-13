@@ -1,7 +1,6 @@
 import { motion } from 'motion/react'
 import type { Recipe } from '../state/types'
 import { IndexCard } from '../recipe/IndexCard'
-import styles from './gallery.module.css'
 
 interface PinnedCardProps {
   recipe: Recipe
@@ -12,7 +11,7 @@ interface PinnedCardProps {
 export function PinnedCard({ recipe, onOpen }: PinnedCardProps) {
   return (
     <motion.div
-      className={styles.pinWrap}
+      className="relative w-72.5 cursor-pointer"
       style={{ rotate: recipe.pin.angle }}
       whileHover={{ rotate: 0, scale: 1.04, zIndex: 5 }}
       whileTap={{ scale: 0.97 }}
@@ -28,17 +27,25 @@ export function PinnedCard({ recipe, onOpen }: PinnedCardProps) {
         }
       }}
     >
-      <svg className={styles.pushpin} width="22" height="26" viewBox="0 0 22 26" aria-hidden="true">
+      <svg
+        className="absolute left-1/2 top-[-13px] z-3 -ml-2.75 drop-shadow-[2px_3px_0_rgba(42,27,16,0.3)]"
+        width="22"
+        height="26"
+        viewBox="0 0 22 26"
+        aria-hidden="true"
+      >
         <path d="M 11 13 L 11 24" stroke="var(--ink)" strokeWidth="2.4" strokeLinecap="round" />
         <circle cx="11" cy="9" r="7.5" fill={recipe.pin.color} stroke="var(--ink)" strokeWidth="2.2" />
         <circle cx="8.4" cy="6.6" r="2" fill="var(--foam)" opacity="0.75" />
       </svg>
-      <div className={styles.thumbWindow}>
-        <div className={styles.thumbScale}>
+      <div className="h-49 w-72.5 overflow-hidden">
+        <div className="w-160 origin-top-left scale-[0.453]">
           <IndexCard recipe={recipe} mode="static" />
         </div>
       </div>
-      <div className={styles.caption}>{recipe.title || 'untitled brew'}</div>
+      <div className="mt-2.5 text-center font-script text-[1.18rem] font-bold text-foam [text-shadow:1.5px_2px_0_rgba(42,27,16,0.4)]">
+        {recipe.title || 'untitled brew'}
+      </div>
     </motion.div>
   )
 }

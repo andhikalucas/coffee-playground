@@ -1,7 +1,6 @@
 import { motion } from 'motion/react'
 import { useSettings } from '../../state/SettingsContext'
 import { playSfx } from '../../audio/sfx'
-import styles from './hud.module.css'
 
 /** Hand-drawn bell, bottom-left. A wobbly slash falls across it when muted. */
 export function MuteToggle() {
@@ -10,7 +9,7 @@ export function MuteToggle() {
   return (
     <motion.button
       type="button"
-      className={`${styles.muteBtn} blob-b`}
+      className="grid h-13 w-13 place-items-center border-[2.5px] border-solid border-ink bg-paper-deep shadow-ink-sm blob-b"
       style={{ rotate: -2 }}
       whileHover={{ scale: 1.08, rotate: 1 }}
       whileTap={{ scale: 0.9 }}

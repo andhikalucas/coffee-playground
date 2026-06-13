@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 import { rngFrom } from '../../lib/rng'
-import styles from './persona.module.css'
+import { cn } from '../../lib/cn'
 
 interface StarburstBadgeProps {
   children: ReactNode
@@ -37,15 +37,21 @@ export function StarburstBadge({
   }, [seed, size])
 
   return (
-    <span className={`${styles.badge} ${className ?? ''}`} style={{ width: size, height: size, ...style }}>
+    <span
+      className={cn('relative grid place-items-center', className)}
+      style={{ width: size, height: size, ...style }}
+    >
       <svg
-        className={styles.badgeSvg}
+        className="absolute inset-0 h-full w-full overflow-visible"
         viewBox={`${-size / 2} ${-size / 2} ${size} ${size}`}
         aria-hidden="true"
       >
         <polygon points={points} fill={color} stroke="var(--ink)" strokeWidth={2} />
       </svg>
-      <span className={styles.badgeLabel} style={{ fontSize }}>
+      <span
+        className="relative z-1 -rotate-6 text-center font-display leading-[1.05] text-foam"
+        style={{ fontSize }}
+      >
         {children}
       </span>
     </span>

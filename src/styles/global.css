@@ -40,11 +40,19 @@
   --font-display: 'Anton', 'Arial Narrow', sans-serif;
   --font-hand: 'Patrick Hand', 'Segoe Print', cursive;
   --font-script: 'Caveat', 'Bradley Hand', cursive;
+
+  /* misprint shadows — these generate shadow-ink / shadow-ink-sm / shadow-soft /
+     shadow-red utilities AND emit each as a :root custom prop, so the older
+     var(--shadow-ink-sm) references keep resolving during the migration. */
+  --shadow-ink: 4px 5px 0 var(--color-ink);
+  --shadow-ink-sm: 3px 3px 0 var(--color-ink);
+  --shadow-soft: 3px 4px 0 rgba(42, 27, 16, 0.16);
+  --shadow-red: 5px 6px 0 var(--color-red);
 }
 
 /* Back-compat aliases: the original short token names (var(--ink), var(--foam),
    …) keep resolving while the CSS modules migrate to utilities module-by-module.
-   Remove an alias once nothing references it. Shadows stay plain custom props. */
+   Remove an alias once nothing references it. (Shadows now live in @theme above.) */
 :root {
   --paper: var(--color-paper);
   --paper-deep: var(--color-paper-deep);
@@ -62,79 +70,75 @@
   --red-deep: var(--color-red-deep);
   --ink-navy: var(--color-ink-navy);
   --ink-forest: var(--color-ink-forest);
-
-  /* misprint shadows */
-  --shadow-ink: 4px 5px 0 var(--color-ink);
-  --shadow-ink-sm: 3px 3px 0 var(--color-ink);
-  --shadow-soft: 3px 4px 0 rgba(42, 27, 16, 0.16);
-  --shadow-red: 5px 6px 0 var(--color-red);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-html,
-body,
-#root {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
+  html,
+  body,
+  #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
 
-body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-hand);
-  font-size: 18px;
-  line-height: 1.45;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-}
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-hand);
+    font-size: 18px;
+    line-height: 1.45;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
 
-h1,
-h2,
-h3,
-h4,
-p,
-ul,
-ol,
-figure {
-  margin: 0;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  ul,
+  ol,
+  figure {
+    margin: 0;
+  }
 
-button {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
 
-input,
-textarea,
-select {
-  font: inherit;
-  color: inherit;
-}
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
 
-img,
-svg {
-  display: block;
-  max-width: 100%;
-}
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
 
-::selection {
-  background: rgba(224, 52, 30, 0.25);
-}
+  ::selection {
+    background: rgba(224, 52, 30, 0.25);
+  }
 
-:focus-visible {
-  outline: 2.5px dashed var(--red);
-  outline-offset: 3px;
-  border-radius: 6px;
+  :focus-visible {
+    outline: 2.5px dashed var(--red);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
 }
 
 /* hand-cut organic corners — the cheap wobble */
@@ -146,6 +150,144 @@ svg {
 }
 .blob-c {
   border-radius: 225px 18px 255px 12px / 12px 255px 18px 225px;
+}
+
+/* washi-tape surface prints — gradient patterns too gnarly for inline utilities.
+   The plain (translucent caramel) tape is a Tailwind bg-caramel/70 at the call site. */
+.tape-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(224, 52, 30, 0.55) 0 8px,
+    rgba(255, 249, 239, 0.65) 8px 16px
+  );
+}
+.tape-dots {
+  background-color: rgba(255, 249, 239, 0.72);
+  background-image: radial-gradient(rgba(42, 27, 16, 0.4) 1.6px, transparent 1.7px);
+  background-size: 9px 9px;
+}
+
+/* app-shell backdrop — layered warm radial washes over paper */
+.bg-shell {
+  background:
+    radial-gradient(120% 90% at 50% 8%, rgba(255, 249, 239, 0.65), transparent 60%),
+    radial-gradient(130% 110% at 50% 110%, rgba(201, 138, 61, 0.12), transparent 55%), var(--paper);
+}
+
+/* scene-transition wipe bands — the trailing halftone (ink) and leading cream sliver
+   (red) are pseudo-elements, so the band fills live here as named utilities */
+.band-red {
+  background: var(--red);
+}
+.band-red::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -10px;
+  width: 10px;
+  background: var(--foam);
+}
+.band-ink {
+  background: var(--ink);
+}
+.band-ink::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -54px;
+  width: 54px;
+  background-image: radial-gradient(circle, var(--ink) 2.6px, transparent 2.8px);
+  background-size: 14px 14px;
+}
+
+/* coffee-styled range input — the slider thumb is a pseudo-element with no inline
+   equivalent, so the whole control stays a named utility */
+.coffee-range {
+  flex: 1;
+  appearance: none;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--ink);
+  outline-offset: 6px;
+}
+.coffee-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 22px;
+  border-radius: 60% 40% 55% 45% / 45% 55% 40% 60%;
+  background: var(--roast);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+.coffee-range::-moz-range-thumb {
+  width: 18px;
+  height: 22px;
+  border-radius: 60% 40% 55% 45% / 45% 55% 40% 60%;
+  background: var(--roast);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+
+/* persona popup chrome — the dimmed halftone field and the jagged close-chip cut */
+.persona-backdrop {
+  background-color: rgba(30, 18, 10, 0.55);
+  background-image:
+    radial-gradient(circle, rgba(20, 12, 8, 0.5) 1.3px, transparent 1.4px),
+    radial-gradient(circle, rgba(20, 12, 8, 0.5) 1.3px, transparent 1.4px);
+  background-size: 16px 16px;
+  background-position:
+    0 0,
+    8px 8px;
+}
+.clip-persona-chip {
+  clip-path: polygon(8% 14%, 50% 2%, 94% 10%, 98% 56%, 88% 95%, 42% 99%, 4% 88%, 2% 40%);
+}
+
+/* gallery corkboard — dotted cork fill, kraft frame, organic corners + inset depth */
+.cork-board {
+  background:
+    radial-gradient(rgba(122, 75, 34, 0.16) 1.6px, transparent 1.8px),
+    radial-gradient(rgba(255, 249, 239, 0.1) 1.2px, transparent 1.4px), var(--cork);
+  background-size:
+    13px 13px,
+    17px 17px;
+  background-position:
+    0 0,
+    6px 9px;
+  border: 12px solid var(--kraft-deep);
+  border-radius: 6px 10px 7px 9px;
+  box-shadow:
+    inset 4px 5px 14px rgba(42, 27, 16, 0.35),
+    4px 6px 0 rgba(42, 27, 16, 0.2);
+}
+
+/* shelf-menu active-row jag chip */
+.clip-shelf-chip {
+  clip-path: polygon(
+    3% 18%,
+    25% 4%,
+    58% 9%,
+    87% 0%,
+    100% 30%,
+    96% 68%,
+    99% 95%,
+    64% 91%,
+    33% 99%,
+    6% 92%,
+    0% 60%
+  );
+}
+
+/* recipe decoration delete-chip jag */
+.clip-delete-chip {
+  clip-path: polygon(10% 16%, 52% 2%, 92% 12%, 98% 58%, 86% 96%, 40% 99%, 4% 86%, 2% 38%);
+}
+
+/* maker desk vignette behind the card */
+.bg-desk-glow {
+  background: radial-gradient(58% 52% at 42% 56%, rgba(201, 138, 61, 0.16), transparent 70%);
 }
 
 /* thin warm scrollbars for inner scroll areas */
@@ -172,4 +314,70 @@ svg {
 .boot-ready {
   opacity: 1;
   transition: opacity 0.45s ease;
+}
+
+/* illustration micro-animations — keyframe-backed, so they stay named global
+   utilities applied to the art SVGs (steam rising, espresso drip, grinder crank). */
+.art-steam {
+  animation: artSteam 2.8s ease-in-out infinite;
+}
+.art-steam-2 {
+  animation: artSteam 2.8s ease-in-out 1.3s infinite;
+}
+.art-drip {
+  animation: artDrip 1.7s ease-in infinite;
+}
+.art-crank {
+  transform-box: fill-box;
+  transform-origin: 12% 88%;
+  animation: artCrank 3.6s ease-in-out infinite;
+}
+.art-swirl {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: artSwirl 7s linear infinite;
+}
+
+@keyframes artSteam {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  35% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+@keyframes artDrip {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  25% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(13px);
+  }
+}
+@keyframes artCrank {
+  0%,
+  100% {
+    transform: rotate(-7deg);
+  }
+  50% {
+    transform: rotate(11deg);
+  }
+}
+@keyframes artSwirl {
+  to {
+    transform: rotate(360deg);
+  }
 }

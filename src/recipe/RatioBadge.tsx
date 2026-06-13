@@ -2,14 +2,13 @@ import { AnimatePresence, motion } from 'motion/react'
 import { StarburstBadge } from '../components/persona/StarburstBadge'
 import { brewRatio } from '../lib/ratio'
 import type { RecipeIngredient } from '../state/types'
-import styles from './recipe.module.css'
 
 /** The number coffee nerds chase, stamped on the card's corner. */
 export function RatioBadge({ ingredients }: { ingredients: RecipeIngredient[] }) {
   const ratio = brewRatio(ingredients)
   return (
     <div
-      className={styles.ratioWrap}
+      className="absolute -right-4.5 -top-5 z-4"
       aria-live="polite"
       aria-label={ratio ? `brew ratio ${ratio}` : undefined}
     >

@@ -10,7 +10,7 @@ import { SceneTransition } from './components/SceneTransition'
 import { PlaygroundScene } from './playground/PlaygroundScene'
 import { RecipeMakerScene } from './recipe/RecipeMakerScene'
 import { GalleryScene } from './gallery/GalleryScene'
-import styles from './AppShell.module.css'
+import { cn } from './lib/cn'
 
 /** Wait for the hand-written fonts so nothing flashes Times New Roman. */
 function useFontBoot() {
@@ -53,13 +53,13 @@ export function AppShell() {
   }, [])
 
   return (
-    <div className={`${styles.shell} ${fontsReady ? 'boot-ready' : 'boot-hidden'}`}>
+    <div className={cn('fixed inset-0 overflow-hidden bg-shell', fontsReady ? 'boot-ready' : 'boot-hidden')}>
       {/* careless mug marks */}
       <CoffeeStainDecor seed="shell-1" size={170} style={{ top: '8%', right: '12%' }} />
       <CoffeeStainDecor seed="shell-2" size={110} opacity={0.1} style={{ bottom: '14%', left: '7%' }} />
       <CoffeeStainDecor seed="shell-3" size={84} opacity={0.09} style={{ top: '55%', right: '4%' }} />
 
-      <main className={styles.sceneHost}>
+      <main className="absolute inset-0">
         {scene === 'playground' && <PlaygroundScene />}
         {scene === 'maker' && <RecipeMakerScene />}
         {scene === 'gallery' && <GalleryScene />}

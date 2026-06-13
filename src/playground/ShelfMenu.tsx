@@ -6,7 +6,10 @@ import { ITEMS } from './items'
 import { PersonaTitle } from '../components/persona/PersonaTitle'
 import { rngFrom } from '../lib/rng'
 import { useSfx } from '../audio/useSfx'
-import styles from './playground.module.css'
+import { cn } from '../lib/cn'
+
+const SHELF_ROW =
+  'relative inline-flex items-center whitespace-nowrap pl-4 pr-5 pt-1 pb-2 font-display uppercase leading-none tracking-[0.01em] text-[calc(clamp(1.7rem,4.4vw,3.1rem)*var(--row-mul,1))] transition-colors duration-80 ease-linear'
 
 interface ShelfMenuProps {
   onOpen: (id: string) => void
@@ -44,9 +47,9 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
   }
 
   return (
-    <div className={styles.shelfWrap}>
+    <div className="absolute inset-0 grid grid-cols-[minmax(330px,46%)_1fr] items-stretch gap-[2vw] pt-22.5 pr-[4vw] pb-17.5 pl-[5vw] max-[760px]:grid-cols-1 max-[760px]:pt-20">
       <ul
-        className={styles.shelfList}
+        className="m-0 flex h-full list-none flex-col items-end justify-between gap-1 p-0 -rotate-6"
         aria-label="everything on the shelf"
         onKeyDown={(e) => {
           if (e.key === 'ArrowDown') {
@@ -70,7 +73,7 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
           return (
             <li
               key={item.id}
-              className={styles.shelfItem}
+              className="origin-right"
               style={{ transform: `translateX(${v.dx}px) rotate(${v.rot}deg) skewX(-8deg)` }}
             >
               <motion.button
@@ -80,7 +83,7 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
                 type="button"
                 tabIndex={isActive ? 0 : -1}
                 aria-pressed={isActive}
-                className={`${styles.shelfRow} ${isActive ? styles.shelfRowActive : ''}`}
+                className={cn(SHELF_ROW, isActive ? 'text-foam' : 'text-ink')}
                 style={{ '--row-mul': v.sizeMul } as CSSProperties}
                 animate={{ scale: isActive ? 1.14 : 1, x: isActive ? 18 : 0 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
@@ -95,23 +98,26 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
               >
                 {isActive && (
                   <motion.span
-                    className={styles.chip}
+                    className="absolute inset-[-3px_-13px] -z-1 bg-red clip-shelf-chip"
                     layoutId="shelf-chip"
                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                   />
                 )}
-                <span className={styles.shelfLabel}>{item.name}</span>
+                <span className="relative z-1 inline-block">{item.name}</span>
               </motion.button>
             </li>
           )
         })}
       </ul>
 
-      <div className={styles.shelfPreview} aria-hidden="true">
+      <div
+        className="flex flex-col items-center justify-center gap-4.5 text-center max-[760px]:hidden"
+        aria-hidden="true"
+      >
         <AnimatePresence mode="popLayout">
           <motion.div
             key={active.id}
-            className={styles.previewArt}
+            className="h-[min(34vh,300px)] w-[min(34vh,300px)] *:h-full *:w-full *:object-contain"
             layoutId={`art-${active.id}`}
             initial={{ scale: 0.7, opacity: 0, rotate: 6 }}
             animate={{ scale: 1, opacity: 1, rotate: 0 }}
@@ -122,8 +128,8 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
           </motion.div>
         </AnimatePresence>
         <PersonaTitle key={`t-${active.id}`} text={active.name} size="md" seed={active.id} />
-        <p className={styles.previewBlurb}>{active.blurb}</p>
-        <span className={styles.previewHint}>↑↓ to browse · enter to open</span>
+        <p className="max-w-[360px] -rotate-1 font-script text-[1.35rem] text-ink-soft">{active.blurb}</p>
+        <span className="font-hand text-[0.92rem] text-ink-faint">↑↓ to browse · enter to open</span>
       </div>
     </div>
   )

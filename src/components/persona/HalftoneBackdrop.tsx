@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { motion } from 'motion/react'
 import { rngFrom } from '../../lib/rng'
 import { useSettings } from '../../state/SettingsContext'
-import styles from './persona.module.css'
 
 interface HalftoneBackdropProps {
   seed?: string
@@ -33,7 +32,7 @@ export function HalftoneBackdrop({ seed = 'burst', onClick }: HalftoneBackdropPr
   return (
     <>
       <motion.div
-        className={styles.backdrop}
+        className="fixed inset-0 persona-backdrop"
         onClick={onClick}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -41,7 +40,7 @@ export function HalftoneBackdrop({ seed = 'burst', onClick }: HalftoneBackdropPr
         transition={{ duration: 0.25 }}
       />
       <motion.svg
-        className={styles.starburst}
+        className="pointer-events-none fixed left-1/2 top-1/2"
         width="1040"
         height="1040"
         viewBox="-520 -520 1040 1040"

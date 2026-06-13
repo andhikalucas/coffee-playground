@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { motion } from 'motion/react'
 import { wobblyLinePath } from '../../lib/wobble'
 import { useElementSize } from '../../hooks/useElementSize'
-import styles from './handmade.module.css'
+import { cn } from '../../lib/cn'
 
 interface WobblyUnderlineProps {
   children: ReactNode
@@ -29,11 +29,11 @@ export function WobblyUnderline({
   )
 
   return (
-    <span ref={ref} className={`${styles.underlineWrap} ${className ?? ''}`}>
+    <span ref={ref} className={cn('relative inline-block', className)}>
       {children}
       {d && (
         <svg
-          className={styles.underlineSvg}
+          className="pointer-events-none absolute left-[-2%] bottom-[-0.28em] h-[0.5em] w-[104%] overflow-visible"
           viewBox={`0 0 ${width} 10`}
           preserveAspectRatio="none"
           aria-hidden="true"

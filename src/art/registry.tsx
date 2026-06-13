@@ -1,5 +1,4 @@
 import type { FC } from 'react'
-import './art.css'
 import { Beans } from './items/Beans'
 import { EspressoMachine } from './items/EspressoMachine'
 import { MokaPot } from './items/MokaPot'

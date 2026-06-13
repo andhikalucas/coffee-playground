@@ -5,7 +5,7 @@ import type { SceneId } from '../../state/types'
 import { tornEdgePolygon } from '../../lib/wobble'
 import { tilt } from '../../styles/tokens'
 import { useSfx } from '../../audio/useSfx'
-import styles from './hud.module.css'
+import { cn } from '../../lib/cn'
 
 const TABS: Array<{ id: SceneId; label: string }> = [
   { id: 'playground', label: 'playground' },
@@ -13,7 +13,14 @@ const TABS: Array<{ id: SceneId; label: string }> = [
   { id: 'gallery', label: 'the board' },
 ]
 
-const TAB_CLASS = [styles.tab0, styles.tab1, styles.tab2]
+const TAB_BASE =
+  'relative origin-top px-4 pb-2.5 pt-3.5 font-hand text-[1.02rem] leading-none text-ink'
+// each washi tab fades a warm tone; active = opaque + multiply turned off
+const TAB_BG = [
+  { off: 'bg-caramel/55 mix-blend-multiply', on: 'bg-caramel/95' },
+  { off: 'bg-caramel-soft/55 mix-blend-multiply', on: 'bg-caramel-soft/95' },
+  { off: 'bg-kraft/60 mix-blend-multiply', on: 'bg-kraft/98' },
+]
 
 /** Three washi-tape tabs hanging off the top edge. */
 export function SceneNav() {
@@ -35,14 +42,14 @@ export function SceneNav() {
   )
 
   return (
-    <nav className={styles.nav} aria-label="scenes">
+    <nav className="fixed right-4.5 top-0 z-65 flex items-start gap-2.5" aria-label="scenes">
       {TABS.map((tab, i) => {
         const active = scene === tab.id
         return (
           <motion.button
             key={tab.id}
             type="button"
-            className={`${styles.tab} ${TAB_CLASS[i]} ${active ? styles.tabActive : ''}`}
+            className={cn(TAB_BASE, active ? `${TAB_BG[i].on} font-bold` : TAB_BG[i].off)}
             style={{ clipPath: clips[i], rotate: tilt(tab.id, 2.5) }}
             animate={{ y: active ? 4 : 0, scale: active ? 0.98 : 1 }}
             whileHover={{ y: active ? 4 : 6 }}

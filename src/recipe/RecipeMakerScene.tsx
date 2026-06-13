@@ -11,9 +11,12 @@ import { WobblyUnderline } from '../components/handmade/WobblyUnderline'
 import { showToast } from '../components/handmade/toastBus'
 import { useSfx } from '../audio/useSfx'
 import { flushVault } from '../lib/storage'
-import styles from './recipe.module.css'
 
 type Tab = 'write' | 'decorate'
+
+const SHELF_PANEL = 'flex flex-col gap-3.5'
+const SHELF_TITLE = 'font-script text-[1.35rem] font-bold'
+const SHELF_HINT = 'font-hand text-[0.85rem] leading-[1.45] text-ink-faint'
 
 /** Write a recipe on the card, then flip to decorate mode and go wild. */
 export function RecipeMakerScene() {
@@ -42,10 +45,14 @@ export function RecipeMakerScene() {
   }
 
   return (
-    <div className={styles.makerWrap}>
-      <div className={styles.deskGlow} aria-hidden="true" />
+    <div className="absolute inset-0 grid grid-cols-[1fr_300px] gap-6 overflow-hidden px-9 pt-21.5 pb-10 max-[1024px]:grid-cols-1 max-[1024px]:grid-rows-[1fr_auto] max-[1024px]:pt-19.5">
+      <div className="pointer-events-none absolute inset-0 bg-desk-glow" aria-hidden="true" />
 
-      <div className={styles.modeTabs} role="group" aria-label="card mode">
+      <div
+        className="absolute left-1/2 top-6 z-10 flex -translate-x-1/2 gap-2.5"
+        role="group"
+        aria-label="card mode"
+      >
         <WobblyButton
           seed="tab-write"
           variant={tab === 'write' ? 'ink' : 'paper'}
@@ -64,8 +71,11 @@ export function RecipeMakerScene() {
         </WobblyButton>
       </div>
 
-      <div className={`${styles.stage} scrollable`}>
-        <div className={styles.cardHolder} style={{ rotate: '-0.8deg' }}>
+      <div className="flex items-start justify-center overflow-y-auto px-2.5 pt-7.5 pb-15 scrollable max-[1024px]:order-0">
+        <div
+          className="flex-none origin-top max-[1180px]:scale-85 max-[1024px]:scale-78"
+          style={{ rotate: '-0.8deg' }}
+        >
           <IndexCard
             recipe={draft}
             mode={tab === 'write' ? 'edit' : 'decorate'}
@@ -81,27 +91,27 @@ export function RecipeMakerScene() {
         </div>
       </div>
 
-      <aside className={`${styles.sideCol}`}>
+      <aside className="flex flex-col gap-4 pt-1 pr-1.5 pb-7.5 pl-0.5 max-[1024px]:order-1 max-[1024px]:max-h-[260px] max-[1024px]:flex-row max-[1024px]:items-start max-[1024px]:overflow-x-auto">
         {tab === 'decorate' ? (
           <StickerShelf onAdded={setSelectedDecor} />
         ) : (
           <WobblyFrame seed="write-tips" fill="var(--paper-deep)" padding={18}>
-            <div className={styles.shelfPanel}>
-              <span className={styles.shelfTitle}>
+            <div className={SHELF_PANEL}>
+              <span className={SHELF_TITLE}>
                 <WobblyUnderline seed="tips-underline">scribble away</WobblyUnderline>
               </span>
-              <p className={styles.shelfHint}>
+              <p className={SHELF_HINT}>
                 everything on the card is editable — name it, tweak the numbers, swap the method stamp. the
                 ratio badge keeps count of coffee : water as you go.
               </p>
-              <p className={styles.shelfHint}>
+              <p className={SHELF_HINT}>
                 when it reads right, flip to <strong>✿ decorate</strong> for stickers and tape.
               </p>
             </div>
           </WobblyFrame>
         )}
 
-        <div className={styles.actionCol}>
+        <div className="flex flex-col items-stretch gap-3">
           <WobblyButton seed="pin-it" variant="red" onClick={pinIt}>
             📌 pin it to the board
           </WobblyButton>

@@ -6,7 +6,6 @@ import type { FloatField } from './useFloatField'
 import { useHoverIntent } from '../hooks/useHoverIntent'
 import { useSfx } from '../audio/useSfx'
 import { TornEdge } from '../components/handmade/TornEdge'
-import styles from './playground.module.css'
 
 interface FloatingItemProps {
   item: PlaygroundItem
@@ -28,7 +27,7 @@ export function FloatingItem({ item, field, onOpen }: FloatingItemProps) {
 
   return (
     <motion.div
-      className={styles.floatItem}
+      className="absolute left-0 top-0 cursor-grab touch-none select-none active:cursor-grabbing"
       style={{
         x: handle.x,
         y: handle.y,
@@ -73,7 +72,7 @@ export function FloatingItem({ item, field, onOpen }: FloatingItemProps) {
       }}
     >
       <motion.div
-        className={styles.itemScale}
+        className="relative h-full w-full"
         animate={{ scale: hover.hovered ? 1.14 : 1 }}
         transition={{ type: 'spring', stiffness: 400, damping: 12 }}
       >
@@ -81,20 +80,22 @@ export function FloatingItem({ item, field, onOpen }: FloatingItemProps) {
             and a layoutId on a transform-positioned node inside the LayoutGroup
             makes Motion re-project every item from the field origin on each hover
             re-render — the "everything snaps to the top-left" glitch. */}
-        <div className={styles.artBox}>
+        <div className="h-full w-full *:h-full *:w-full *:object-contain">
           <Art />
         </div>
         <AnimatePresence>
           {hover.hovered && (
             <motion.div
-              className={styles.nameTag}
+              className="absolute bottom-[-34px] left-1/2 whitespace-nowrap"
               initial={{ opacity: 0, y: 8, x: '-50%', rotate: -3 }}
               animate={{ opacity: 1, y: 0, x: '-50%', rotate: -2 }}
               exit={{ opacity: 0, y: 6, x: '-50%' }}
               transition={{ type: 'spring', stiffness: 520, damping: 26 }}
             >
               <TornEdge seed={`tag-${item.id}`} tooth={7} depth={3} shadow>
-                <span className={styles.nameTagInner}>{item.name}</span>
+                <span className="bg-paper-deep px-4 pt-1.25 pb-1.75 font-script text-[1.22rem] font-bold text-ink">
+                  {item.name}
+                </span>
               </TornEdge>
             </motion.div>
           )}

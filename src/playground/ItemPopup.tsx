@@ -7,7 +7,6 @@ import type { PlaygroundItem } from './items'
 import { useRecipes } from '../state/RecipesContext'
 import { useScene } from '../state/SceneContext'
 import { useSfx } from '../audio/useSfx'
-import styles from './playground.module.css'
 
 interface ItemPopupProps {
   item: PlaygroundItem
@@ -41,21 +40,25 @@ export function ItemPopup({ item, onClose }: ItemPopupProps) {
         </div>
       </PopupRow>
       <PopupRow>
-        <div className={styles.popupBody}>
-          <div className={styles.popupArt}>
+        <div className="flex items-start gap-5 max-[760px]:flex-col max-[760px]:items-center">
+          <div className="-mt-1.5 h-42 w-42 flex-none *:h-full *:w-full *:object-contain">
             <Art />
           </div>
-          <div className={styles.popupText}>
-            <p className={styles.blurb}>{item.blurb}</p>
+          <div className="flex flex-1 flex-col gap-3">
+            <p className="rotate-[-0.6deg] font-script text-[1.45rem] leading-[1.25] text-ink">
+              {item.blurb}
+            </p>
             <WobblyFrame seed={`fact-${item.id}`} fill="var(--foam)" padding="12px 16px">
-              <span className={styles.factTag}>fun fact</span>
-              <p className={styles.factText}>{item.funFact}</p>
+              <span className="mb-1.5 inline-block -rotate-2 bg-ink px-2.5 pt-0.75 pb-0.5 font-display text-[0.78rem] uppercase tracking-[0.08em] text-foam">
+                fun fact
+              </span>
+              <p className="text-[0.98rem] leading-[1.45] text-ink-soft">{item.funFact}</p>
             </WobblyFrame>
           </div>
         </div>
       </PopupRow>
       <PopupRow>
-        <div className={styles.popupActions}>
+        <div className="flex items-center gap-4 pt-1">
           <WobblyButton variant="red" seed={`use-${item.id}`} onClick={useInRecipe}>
             use in a recipe →
           </WobblyButton>

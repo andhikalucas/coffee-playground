@@ -9,7 +9,6 @@ import { exportRecipePng } from '../lib/exportPng'
 import { useRecipes } from '../state/RecipesContext'
 import { useScene } from '../state/SceneContext'
 import { useSfx } from '../audio/useSfx'
-import styles from './gallery.module.css'
 
 interface CardFocusProps {
   recipe: Recipe
@@ -69,12 +68,12 @@ export function CardFocus({ recipe, onClose }: CardFocusProps) {
         </div>
       </PopupRow>
       <PopupRow>
-        <div className={styles.focusCardWrap}>
+        <div className="-mx-1.5 my-1 flex justify-center max-[880px]:-mb-20 max-[880px]:origin-top max-[880px]:scale-80">
           <IndexCard recipe={recipe} mode="static" />
         </div>
       </PopupRow>
       <PopupRow>
-        <div className={styles.focusActions}>
+        <div className="flex flex-wrap items-center gap-3 pt-1.5">
           <WobblyButton seed="focus-export" variant="red" onClick={onExport} disabled={exporting}>
             {exporting ? 'brewing the png…' : '⤓ save as png'}
           </WobblyButton>

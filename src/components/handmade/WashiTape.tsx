@@ -1,9 +1,10 @@
 import { useId, useMemo } from 'react'
 import type { CSSProperties } from 'react'
 import { tornEdgePolygon } from '../../lib/wobble'
-import styles from './handmade.module.css'
+import { cn } from '../../lib/cn'
 
-const VARIANT_CLASS = [styles.tapeCaramel, styles.tapeStripes, styles.tapeDots] as const
+// 0 = plain translucent caramel; 1 = diagonal stripes, 2 = dotted (both global utils)
+const VARIANT_CLASS = ['bg-caramel/70', 'tape-stripes', 'tape-dots'] as const
 
 interface WashiTapeProps {
   variant?: 0 | 1 | 2
@@ -32,7 +33,11 @@ export function WashiTape({
 
   return (
     <span
-      className={`${styles.tape} ${VARIANT_CLASS[variant]} ${className ?? ''}`}
+      className={cn(
+        'pointer-events-none absolute h-6.5 opacity-[0.82] mix-blend-multiply',
+        VARIANT_CLASS[variant],
+        className,
+      )}
       style={{ width: length, transform: `rotate(${rotation}deg)`, clipPath, ...style }}
       aria-hidden="true"
     />

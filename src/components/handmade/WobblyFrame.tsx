@@ -2,7 +2,7 @@ import { useId, useMemo } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 import { wobblyRectPath } from '../../lib/wobble'
 import { useElementSize } from '../../hooks/useElementSize'
-import styles from './handmade.module.css'
+import { cn } from '../../lib/cn'
 
 interface WobblyFrameProps {
   children?: ReactNode
@@ -48,10 +48,10 @@ export function WobblyFrame({
   }, [width, height, wobbleSeed, amplitude])
 
   return (
-    <div ref={ref} className={`${styles.frame} ${className ?? ''}`} style={{ padding, ...style }}>
+    <div ref={ref} className={cn('relative block', className)} style={{ padding, ...style }}>
       {paths && (
         <svg
-          className={styles.frameSvg}
+          className="pointer-events-none absolute -inset-2 h-[calc(100%+16px)] w-[calc(100%+16px)] overflow-visible"
           viewBox={`${-MARGIN} ${-MARGIN} ${width + MARGIN * 2} ${height + MARGIN * 2}`}
           aria-hidden="true"
         >
@@ -76,7 +76,7 @@ export function WobblyFrame({
           )}
         </svg>
       )}
-      <div className={styles.frameContent}>{children}</div>
+      <div className="relative z-[1]">{children}</div>
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import { useId } from 'react'
-import styles from './handmade.module.css'
 
 /**
  * Paper fiber texture via feTurbulence. Exactly ONE full-screen instance
@@ -10,7 +9,14 @@ export function PaperGrain({ scoped = false }: { scoped?: boolean }) {
   const id = useId()
   const filterId = `grain-${id.replace(/[^a-zA-Z0-9_-]/g, '')}`
   return (
-    <svg className={scoped ? styles.grainScoped : styles.grain} aria-hidden="true">
+    <svg
+      className={
+        scoped
+          ? 'pointer-events-none absolute inset-0 h-full w-full opacity-[0.07] mix-blend-multiply'
+          : 'pointer-events-none fixed inset-0 z-60 h-full w-full opacity-[0.06] mix-blend-multiply'
+      }
+      aria-hidden="true"
+    >
       <filter id={filterId}>
         <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" />
         <feColorMatrix type="matrix" values="0 0 0 0 0.16  0 0 0 0 0.10  0 0 0 0 0.06  0 0 0 0.7 0" />
