@@ -59,8 +59,10 @@ export function PlaygroundScene() {
         )}
       </LayoutGroup>
 
+      {/* top-centre on roomy screens; moves to the top-right once the washi nav
+          drops to the bottom bar (≤1024px), keeping its full text label */}
       <div
-        className="absolute left-1/2 top-5.5 z-10 flex -translate-x-1/2 gap-0"
+        className="absolute left-1/2 top-5.5 z-10 flex -translate-x-1/2 gap-0 max-[1024px]:left-auto max-[1024px]:right-4.5 max-[1024px]:translate-x-0"
         role="group"
         aria-label="arrange the playground"
       >
@@ -83,7 +85,7 @@ export function PlaygroundScene() {
       </div>
 
       {mode === 'float' && (
-        <p className="pointer-events-none absolute bottom-6.5 left-1/2 -translate-x-1/2 rotate-[-1.4deg] text-center font-script text-[1.25rem] text-ink-faint">
+        <p className="pointer-events-none absolute bottom-6.5 left-1/2 max-w-[88%] -translate-x-1/2 rotate-[-1.4deg] text-center font-script text-[1.25rem] text-ink-faint max-[1024px]:bottom-16 max-[1024px]:text-[1rem]">
           drag things around · click anything for its story
         </p>
       )}

@@ -63,12 +63,13 @@ export function CardFocus({ recipe, onClose }: CardFocusProps) {
       labelledBy={`focus-${recipe.id}`}
     >
       <PopupRow>
-        <div id={`focus-${recipe.id}`}>
+        {/* keep the heading clear of the pinned ✕ chip in the top-right corner */}
+        <div id={`focus-${recipe.id}`} className="pr-10">
           <PersonaTitle text={recipe.title || 'untitled brew'} size="md" seed={recipe.id} />
         </div>
       </PopupRow>
       <PopupRow>
-        <div className="-mx-1.5 my-1 flex justify-center max-[880px]:-mb-20 max-[880px]:origin-top max-[880px]:scale-80">
+        <div className="-mx-1.5 my-1 flex origin-top justify-center max-[880px]:-mb-20 max-[880px]:scale-80 max-[760px]:-mb-32 max-[760px]:scale-[0.66] max-[560px]:-mb-44 max-[560px]:scale-[0.52] max-[420px]:-mb-52 max-[420px]:scale-[0.44]">
           <IndexCard recipe={recipe} mode="static" />
         </div>
       </PopupRow>

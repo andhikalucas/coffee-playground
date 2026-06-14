@@ -164,12 +164,21 @@ export function RadioPanel() {
         ) : (
           <motion.div
             key="open"
+            // when the washi nav is at the bottom (≤1024px) the panel lifts to float
+            // above the corner controls (mute, scene-nav bar) so nothing overlaps,
+            // keeping its natural width anchored bottom-right rather than going full-width
+            className="max-[1024px]:fixed max-[1024px]:bottom-20 max-[1024px]:right-5"
             initial={{ y: 30, scale: 0.85, opacity: 0 }}
             animate={{ y: 0, scale: 1, opacity: 1 }}
             exit={{ y: 30, scale: 0.85, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 380, damping: 24 }}
           >
-            <WobblyFrame seed="radio-panel" fill="var(--paper-deep)" padding={18} className="w-[360px]">
+            <WobblyFrame
+              seed="radio-panel"
+              fill="var(--paper-deep)"
+              padding={18}
+              className="w-[min(86vw,360px)]"
+            >
               <div className="mb-2 flex items-center justify-between gap-2">
                 <span className="font-script text-[1.4rem] font-bold text-ink">café radio</span>
                 <WobblyButton

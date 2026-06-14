@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from 'react'
-import type { CSSProperties } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { ART } from '../art/registry'
 import { ITEMS } from './items'
@@ -8,8 +7,11 @@ import { rngFrom } from '../lib/rng'
 import { useSfx } from '../audio/useSfx'
 import { cn } from '../lib/cn'
 
+// static Tailwind text sizes (no fluid scaling): one step smaller on ≤768. In the
+// ≤768 two-column grid, long names wrap inside their column (centred) instead of
+// clipping at the edge. The per-row size variance rides on the motion `scale`.
 const SHELF_ROW =
-  'relative inline-flex items-center whitespace-nowrap pl-4 pr-5 pt-1 pb-2 font-display uppercase leading-none tracking-[0.01em] text-[calc(clamp(1.7rem,4.4vw,3.1rem)*var(--row-mul,1))] transition-colors duration-80 ease-linear'
+  'relative inline-flex items-center whitespace-nowrap pl-4 pr-5 pt-1 pb-2 font-display uppercase leading-none tracking-[0.01em] text-4xl transition-colors duration-80 ease-linear max-[768px]:max-w-full max-[768px]:justify-center max-[768px]:whitespace-normal max-[768px]:text-center max-[768px]:text-3xl max-[768px]:leading-[1.02]'
 
 interface ShelfMenuProps {
   onOpen: (id: string) => void
@@ -47,9 +49,9 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
   }
 
   return (
-    <div className="absolute inset-0 grid grid-cols-[minmax(330px,46%)_1fr] items-stretch gap-[2vw] pt-22.5 pr-[4vw] pb-17.5 pl-[5vw] max-[760px]:grid-cols-1 max-[760px]:pt-20">
+    <div className="absolute inset-0 grid grid-cols-[minmax(330px,46%)_1fr] items-stretch gap-[2vw] pt-26 pr-[4vw] pb-17.5 pl-[5vw] [--diag:1] max-[1024px]:pb-24 max-[768px]:grid-cols-1 max-[768px]:place-content-center max-[768px]:pt-20 max-[768px]:[--diag:0]">
       <ul
-        className="m-0 flex h-full list-none flex-col items-end justify-between gap-1 p-0 -rotate-6"
+        className="m-0 flex h-full list-none flex-col items-end justify-between gap-1 p-0 -rotate-6 max-[768px]:grid max-[768px]:h-auto max-[768px]:grid-cols-2 max-[768px]:place-items-center max-[768px]:content-center max-[768px]:gap-x-6 max-[768px]:gap-y-2 max-[768px]:rotate-0 max-[512px]:gap-x-3 max-[512px]:gap-y-1"
         aria-label="everything on the shelf"
         onKeyDown={(e) => {
           if (e.key === 'ArrowDown') {
@@ -73,8 +75,12 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
           return (
             <li
               key={item.id}
-              className="origin-right"
-              style={{ transform: `translateX(${v.dx}px) rotate(${v.rot}deg) skewX(-8deg)` }}
+              className="origin-right max-[768px]:w-full max-[768px]:text-center"
+              style={{
+                // --diag is 1 on desktop (hand-set diagonal) and 0 at ≤768 so the
+                // 2-column grid reads as a tidy, upright, centred list
+                transform: `translateX(calc(${v.dx}px * var(--diag, 1))) rotate(calc(${v.rot}deg * var(--diag, 1))) skewX(calc(-8deg * var(--diag, 1)))`,
+              }}
             >
               <motion.button
                 ref={(el) => {
@@ -84,8 +90,7 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
                 tabIndex={isActive ? 0 : -1}
                 aria-pressed={isActive}
                 className={cn(SHELF_ROW, isActive ? 'text-foam' : 'text-ink')}
-                style={{ '--row-mul': v.sizeMul } as CSSProperties}
-                animate={{ scale: isActive ? 1.14 : 1, x: isActive ? 18 : 0 }}
+                animate={{ scale: (isActive ? 1.14 : 1) * v.sizeMul, x: isActive ? 18 : 0 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 onPointerEnter={() => {
                   if (i !== activeIdx) {
@@ -111,7 +116,7 @@ export function ShelfMenu({ onOpen }: ShelfMenuProps) {
       </ul>
 
       <div
-        className="flex flex-col items-center justify-center gap-4.5 text-center max-[760px]:hidden"
+        className="flex flex-col items-center justify-center gap-4.5 text-center max-[768px]:hidden"
         aria-hidden="true"
       >
         <AnimatePresence mode="popLayout">

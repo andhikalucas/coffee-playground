@@ -74,9 +74,10 @@ export function IndexCard({ recipe, mode, editor, decorate, cardRef, className, 
           <path d={border} fill="none" stroke="var(--ink)" strokeWidth={2.6} strokeLinecap="round" />
         </svg>
       )}
+      
+      <RatioBadge ingredients={recipe.ingredients} />
 
       <div className="relative z-1 flex min-h-[426px] flex-col gap-2.5 px-7 pt-5.5 pb-6">
-        <RatioBadge ingredients={recipe.ingredients} />
         {mode === 'edit' && editor ? editor : <StaticCardContent recipe={recipe} />}
       </div>
 
@@ -106,7 +107,7 @@ function StaticCardContent({ recipe }: { recipe: Recipe }) {
           </div>
           <ul className="m-0 flex list-none flex-col gap-1 p-0">
             {recipe.ingredients.map((ing) => (
-              <li key={ing.id} className="flex items-center gap-1.75 font-script text-[1.32rem] leading-[1.5]">
+              <li key={ing.id} className="flex items-center gap-1.75 font-script text-[1.36rem] leading-[1.5]">
                 <IngredientIcon kind={ing.kind} />
                 <span>
                   {Number.isFinite(ing.amount) ? ing.amount : '–'} {ing.unit} {ingredientName(ing)}
@@ -129,7 +130,7 @@ function StaticCardContent({ recipe }: { recipe: Recipe }) {
                 >
                   {i + 1}
                 </span>
-                <span className="flex-1 resize-none overflow-hidden bg-transparent px-0.5 pb-px font-script text-[1.28rem] leading-[1.32] text-[color:var(--card-ink)]">
+                <span className="flex-1 resize-none overflow-hidden bg-transparent px-0.5 pb-px font-script text-[1.36rem] leading-[1.32] text-[color:var(--card-ink)]">
                   {step}
                 </span>
               </li>

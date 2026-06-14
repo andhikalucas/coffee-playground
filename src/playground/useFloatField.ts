@@ -8,6 +8,11 @@ export const BASE_SIZE = 120
 const PAD_X = 90
 const PAD_Y = 100
 const REPULSION = 0.045
+// keep drift items legible on phones: never render smaller than ~120px (7.5rem at
+// a 16px root, i.e. Tailwind w-30). Below the `sm` breakpoint we step the size
+// down once rather than shrinking continuously.
+const MIN_SIZE = 120
+const SM = 640
 
 export interface FloatHandle {
   x: MotionValue<number>
@@ -24,6 +29,8 @@ export interface FloatHandle {
 
 export interface FloatField {
   handles: Map<string, FloatHandle>
+  /** effective rendered size for a handle (px), floored at MIN_SIZE */
+  sizeOf: (h: FloatHandle) => number
   startDrag: (id: string) => void
   endDrag: (id: string) => void
 }
@@ -43,6 +50,15 @@ interface FieldOpts {
  */
 export function useFloatField(items: PlaygroundItem[], opts: FieldOpts): FloatField {
   const { active, reducedMotion, width, height } = opts
+
+  // items keep their natural size at/above `sm`; below it they step down once
+  // (not continuously) and are floored at MIN_SIZE via `sizeOf`. The edge padding
+  // still tightens on small fields so items spread rather than pile up.
+  const scale = width >= SM || width < 10 ? 1 : 0.88
+  const padX = width < 10 ? PAD_X : Math.min(PAD_X, Math.max(30, width * 0.1))
+  const padY = height < 10 ? PAD_Y : Math.min(PAD_Y, Math.max(44, height * 0.1))
+
+  const sizeOf = useCallback((h: FloatHandle) => Math.max(MIN_SIZE, h.size * scale), [scale])
 
   // recreated only if the items array identity changes (it's a module
   // constant today) — dragged positions reset in that case, which beats
@@ -75,16 +91,19 @@ export function useFloatField(items: PlaygroundItem[], opts: FieldOpts): FloatFi
 
   const usable = useCallback(
     (axis: 'x' | 'y', size: number) =>
-      axis === 'x' ? Math.max(1, width - PAD_X * 2 - size) : Math.max(1, height - PAD_Y * 2 - size),
-    [width, height],
+      axis === 'x' ? Math.max(1, width - padX * 2 - size) : Math.max(1, height - padY * 2 - size),
+    [width, height, padX, padY],
   )
 
   const homePx = useCallback(
-    (h: FloatHandle) => ({
-      x: PAD_X + h.home.fx * usable('x', h.size),
-      y: PAD_Y + h.home.fy * usable('y', h.size),
-    }),
-    [usable],
+    (h: FloatHandle) => {
+      const s = sizeOf(h)
+      return {
+        x: padX + h.home.fx * usable('x', s),
+        y: padY + h.home.fy * usable('y', s),
+      }
+    },
+    [usable, padX, padY, sizeOf],
   )
 
   // settle items onto their homes whenever the field can't animate
@@ -111,24 +130,26 @@ export function useFloatField(items: PlaygroundItem[], opts: FieldOpts): FloatFi
         const ha = list[a]
         const hb = list[b]
         if (ha.dragging || hb.dragging) continue
+        const sa = sizeOf(ha)
+        const sb = sizeOf(hb)
         const pa = homePx(ha)
         const pb = homePx(hb)
-        const cxA = pa.x + ha.size / 2
-        const cyA = pa.y + ha.size / 2
-        const cxB = pb.x + hb.size / 2
-        const cyB = pb.y + hb.size / 2
+        const cxA = pa.x + sa / 2
+        const cyA = pa.y + sa / 2
+        const cxB = pb.x + sb / 2
+        const cyB = pb.y + sb / 2
         const dx = cxB - cxA
         const dy = cyB - cyA
         const dist = Math.hypot(dx, dy) || 1
-        const minDist = (ha.size + hb.size) * 0.52 + 8
+        const minDist = (sa + sb) * 0.52 + 8
         if (dist < minDist) {
           const push = (minDist - dist) * REPULSION
           const ux = dx / dist
           const uy = dy / dist
-          ha.home.fx = clamp01(ha.home.fx - (ux * push) / usable('x', ha.size))
-          ha.home.fy = clamp01(ha.home.fy - (uy * push) / usable('y', ha.size))
-          hb.home.fx = clamp01(hb.home.fx + (ux * push) / usable('x', hb.size))
-          hb.home.fy = clamp01(hb.home.fy + (uy * push) / usable('y', hb.size))
+          ha.home.fx = clamp01(ha.home.fx - (ux * push) / usable('x', sa))
+          ha.home.fy = clamp01(ha.home.fy - (uy * push) / usable('y', sa))
+          hb.home.fx = clamp01(hb.home.fx + (ux * push) / usable('x', sb))
+          hb.home.fy = clamp01(hb.home.fy + (uy * push) / usable('y', sb))
         }
       }
     }
@@ -145,6 +166,7 @@ export function useFloatField(items: PlaygroundItem[], opts: FieldOpts): FloatFi
   return useMemo(
     () => ({
       handles,
+      sizeOf,
       startDrag: (id: string) => {
         const h = handles.get(id)
         if (h) h.dragging = true
@@ -153,12 +175,13 @@ export function useFloatField(items: PlaygroundItem[], opts: FieldOpts): FloatFi
         const h = handles.get(id)
         if (!h) return
         // the item lives where you left it
-        h.home.fx = clamp01((h.x.get() - PAD_X) / usable('x', h.size))
-        h.home.fy = clamp01((h.y.get() - PAD_Y) / usable('y', h.size))
+        const s = sizeOf(h)
+        h.home.fx = clamp01((h.x.get() - padX) / usable('x', s))
+        h.home.fy = clamp01((h.y.get() - padY) / usable('y', s))
         h.dragging = false
       },
     }),
-    [handles, usable],
+    [handles, usable, sizeOf, padX, padY],
   )
 }
 

@@ -17,7 +17,7 @@ export function GalleryScene() {
 
   return (
     <>
-      <div className="absolute inset-[70px_26px_26px] overflow-x-hidden overflow-y-auto cork-board scrollable">
+      <div className="absolute inset-[70px_26px_26px] overflow-x-hidden overflow-y-auto cork-board scrollable max-[1024px]:inset-[58px_12px_84px]">
         {recipes.length === 0 ? (
           <div className="grid h-full place-content-center justify-items-center gap-4.5 p-7.5 text-center">
             <div className="h-37.5 w-37.5 opacity-[0.92] *:h-full *:w-full *:object-contain">
@@ -31,7 +31,7 @@ export function GalleryScene() {
             </WobblyButton>
           </div>
         ) : (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(290px,1fr))] justify-items-center gap-x-7.5 gap-y-11 px-9.5 pt-11 pb-15">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(290px,1fr))] justify-items-center gap-x-7.5 gap-y-11 px-9.5 pt-11 pb-15 max-[768px]:gap-x-3 max-[768px]:gap-y-6 max-[768px]:px-3 max-[768px]:pt-6 max-[768px]:pb-10">
             {recipes.map((recipe) => (
               <PinnedCard key={recipe.id} recipe={recipe} onOpen={setFocusedId} />
             ))}

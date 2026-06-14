@@ -13,8 +13,12 @@ const TABS: Array<{ id: SceneId; label: string }> = [
   { id: 'gallery', label: 'the board' },
 ]
 
-const TAB_BASE =
-  'relative origin-top px-4 pb-2.5 pt-3.5 font-hand text-[1.02rem] leading-none text-ink'
+// at ≤1024px the three tabs drop to a centred bar at the bottom edge (full size,
+// full labels), bottom-aligned with the mute + radio corner controls. The switch
+// is 1024 (not 768) so the top-right tabs never overlap a top-centre scene toggle
+// — the widest toggle (maker's ✎ write / ✿ decorate) only clears ~1008px — and it
+// matches the maker's single-column breakpoint.
+const TAB_BASE = 'relative origin-top px-4 pb-2.5 pt-3.5 font-hand text-[1.02rem] leading-none text-ink'
 // each washi tab fades a warm tone; active = opaque + multiply turned off
 const TAB_BG = [
   { off: 'bg-caramel/55 mix-blend-multiply', on: 'bg-caramel/95' },
@@ -42,7 +46,10 @@ export function SceneNav() {
   )
 
   return (
-    <nav className="fixed right-4.5 top-0 z-65 flex items-start gap-2.5" aria-label="scenes">
+    <nav
+      className="fixed right-4.5 top-5.5 z-65 flex items-start gap-2.5 max-[1024px]:left-1/2 max-[1024px]:right-auto max-[1024px]:top-auto max-[1024px]:bottom-5 max-[1024px]:-translate-x-1/2 max-[1024px]:items-end"
+      aria-label="scenes"
+    >
       {TABS.map((tab, i) => {
         const active = scene === tab.id
         return (

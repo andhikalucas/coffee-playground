@@ -1,5 +1,8 @@
 import { useRef, useState } from 'react'
+import { AnimatePresence } from 'motion/react'
 import { useRecipes } from '../state/RecipesContext'
+import { useElementSize } from '../hooks/useElementSize'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useScene } from '../state/SceneContext'
 import type { RecipeDecor } from '../state/types'
 import { IndexCard } from './IndexCard'
@@ -8,6 +11,7 @@ import { StickerShelf } from './StickerShelf'
 import { WobblyButton } from '../components/handmade/WobblyButton'
 import { WobblyFrame } from '../components/handmade/WobblyFrame'
 import { WobblyUnderline } from '../components/handmade/WobblyUnderline'
+import { StickerPickerSheet } from './StickerPickerSheet'
 import { showToast } from '../components/handmade/toastBus'
 import { useSfx } from '../audio/useSfx'
 import { flushVault } from '../lib/storage'
@@ -25,7 +29,20 @@ export function RecipeMakerScene() {
   const play = useSfx()
   const [tab, setTab] = useState<Tab>('write')
   const [selectedDecor, setSelectedDecor] = useState<string | null>(null)
+  const [pickerOpen, setPickerOpen] = useState(false)
   const cardRef = useRef<HTMLDivElement | null>(null)
+
+  // On phones the inline decoration drawer ate more than half the screen and
+  // crowded the recipe, so there it collapses to a button that opens the drawer
+  // in a popup; tablets/desktop keep the side panel.
+  const isPhone = useMediaQuery('(max-width: 768px)')
+
+  // The card is designed at a fixed 640px width. Rather than a fixed ladder of
+  // breakpoint scales (which left phones at ~0.4× and the writing barely legible),
+  // measure the column and scale the card to fill it — capped at 1× so it never
+  // grows past its design size on desktop. Bigger card ⇒ bigger, readable text.
+  const [fitRef, { width: fitW }] = useElementSize<HTMLDivElement>()
+  const cardFit = fitW > 0 ? Math.min(1, (fitW - 18) / 640) : 1
 
   const updateDecor = (mutate: (d: RecipeDecor) => void) => updateDraft((d) => mutate(d.decor))
 
@@ -45,11 +62,13 @@ export function RecipeMakerScene() {
   }
 
   return (
-    <div className="absolute inset-0 grid grid-cols-[1fr_300px] gap-6 overflow-hidden px-9 pt-21.5 pb-10 max-[1024px]:grid-cols-1 max-[1024px]:grid-rows-[1fr_auto] max-[1024px]:pt-19.5">
+    <div className="absolute inset-0 grid grid-cols-[1fr_300px] gap-6 overflow-hidden px-9 pt-21.5 pb-10 max-[1024px]:grid-cols-1 max-[1024px]:grid-rows-[1fr_auto] max-[1024px]:gap-3 max-[1024px]:px-3 max-[1024px]:pt-19.5 max-[1024px]:pb-24 max-[768px]:px-2">
       <div className="pointer-events-none absolute inset-0 bg-desk-glow" aria-hidden="true" />
 
+      {/* top-centre on roomy screens; moves to the top-right once the washi nav
+          drops to the bottom bar (≤1024px), keeping its full text label */}
       <div
-        className="absolute left-1/2 top-6 z-10 flex -translate-x-1/2 gap-2.5"
+        className="absolute left-1/2 top-5.5 z-10 flex -translate-x-1/2 gap-2.5 max-[1024px]:left-auto max-[1024px]:right-4.5 max-[1024px]:translate-x-0"
         role="group"
         aria-label="card mode"
       >
@@ -57,7 +76,10 @@ export function RecipeMakerScene() {
           seed="tab-write"
           variant={tab === 'write' ? 'ink' : 'paper'}
           aria-pressed={tab === 'write'}
-          onClick={() => setTab('write')}
+          onClick={() => {
+            setTab('write')
+            setPickerOpen(false)
+          }}
         >
           ✎ write
         </WobblyButton>
@@ -71,10 +93,13 @@ export function RecipeMakerScene() {
         </WobblyButton>
       </div>
 
-      <div className="flex items-start justify-center overflow-y-auto px-2.5 pt-7.5 pb-15 scrollable max-[1024px]:order-0">
+      <div
+        ref={fitRef}
+        className="flex items-start justify-center overflow-y-auto px-2.5 pt-7.5 pb-15 scrollable max-[1024px]:order-0 max-[768px]:px-1.5"
+      >
         <div
-          className="flex-none origin-top max-[1180px]:scale-85 max-[1024px]:scale-78"
-          style={{ rotate: '-0.8deg' }}
+          className="flex-none origin-top"
+          style={{ scale: cardFit, rotate: '-0.8deg' }}
         >
           <IndexCard
             recipe={draft}
@@ -91,25 +116,45 @@ export function RecipeMakerScene() {
         </div>
       </div>
 
-      <aside className="flex flex-col gap-4 pt-1 pr-1.5 pb-7.5 pl-0.5 max-[1024px]:order-1 max-[1024px]:max-h-[260px] max-[1024px]:flex-row max-[1024px]:items-start max-[1024px]:overflow-x-auto">
-        {tab === 'decorate' ? (
-          <StickerShelf onAdded={setSelectedDecor} />
-        ) : (
-          <WobblyFrame seed="write-tips" fill="var(--paper-deep)" padding={18}>
-            <div className={SHELF_PANEL}>
-              <span className={SHELF_TITLE}>
-                <WobblyUnderline seed="tips-underline">scribble away</WobblyUnderline>
-              </span>
-              <p className={SHELF_HINT}>
-                everything on the card is editable — name it, tweak the numbers, swap the method stamp. the
-                ratio badge keeps count of coffee : water as you go.
-              </p>
-              <p className={SHELF_HINT}>
-                when it reads right, flip to <strong>✿ decorate</strong> for stickers and tape.
-              </p>
-            </div>
-          </WobblyFrame>
-        )}
+      <aside className="flex flex-col gap-4 pt-1 pr-1.5 pb-7.5 pl-0.5 max-[1024px]:order-1">
+        {/* on phones the drawer scrolls vertically inside a capped height so the
+            pin/fresh actions below stay put instead of being pushed off-screen */}
+        <div className="min-h-0 scrollable max-[1024px]:max-h-[44vh] max-[1024px]:overflow-y-auto max-[1024px]:pr-1">
+          {tab === 'decorate' ? (
+            isPhone ? (
+              <WobblyButton
+                seed="open-drawer"
+                variant="ink"
+                className="w-full"
+                onClick={() => setPickerOpen(true)}
+              >
+                🎨 open the sticker drawer
+              </WobblyButton>
+            ) : (
+              <StickerShelf onAdded={setSelectedDecor} />
+            )
+          ) : (
+            <WobblyFrame
+              seed="write-tips"
+              fill="var(--paper-deep)"
+              padding={18}
+              className="max-[768px]:mx-auto max-[768px]:max-w-md"
+            >
+              <div className={SHELF_PANEL}>
+                <span className={SHELF_TITLE}>
+                  <WobblyUnderline seed="tips-underline">scribble away</WobblyUnderline>
+                </span>
+                <p className={SHELF_HINT}>
+                  everything on the card is editable — name it, tweak the numbers, swap the method stamp. the
+                  ratio badge keeps count of coffee : water as you go.
+                </p>
+                <p className={SHELF_HINT}>
+                  when it reads right, flip to <strong>✿ decorate</strong> for stickers and tape.
+                </p>
+              </div>
+            </WobblyFrame>
+          )}
+        </div>
 
         <div className="flex flex-col items-stretch gap-3">
           <WobblyButton seed="pin-it" variant="red" onClick={pinIt}>
@@ -120,6 +165,20 @@ export function RecipeMakerScene() {
           </WobblyButton>
         </div>
       </aside>
+
+      {/* phones: the drawer opens as a popup so it never crowds the recipe.
+          picking a sticker/tape closes it (the piece lands selected on the card,
+          ready to drag); ink/paper apply live and keep it open. */}
+      <AnimatePresence>
+        {isPhone && tab === 'decorate' && pickerOpen && (
+          <StickerPickerSheet onClose={() => setPickerOpen(false)} labelledBy="sticker-picker-title">
+            <span id="sticker-picker-title" className="sr-only">
+              decoration drawer
+            </span>
+            <StickerShelf onAdded={setSelectedDecor} onPlaced={() => setPickerOpen(false)} />
+          </StickerPickerSheet>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

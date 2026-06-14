@@ -10,18 +10,12 @@ A hand-drawn "coffee playground" — a React 19 + TypeScript + Vite SPA with thr
 
 ## Commands
 
-- `pnpm dev` — dev server (Vite default port; the e2e scripts expect **5180**, so run `pnpm dev --port 5180` when testing)
+- `pnpm dev` — dev server (Vite default port :5173; pass `--port 5180` if a throwaway Playwright script needs a fixed port)
 - `pnpm build` — `tsc -b` then `vite build` (typecheck happens here; there is no separate typecheck script)
 - `pnpm lint` — ESLint (flat config; typescript-eslint + react-hooks + react-refresh)
 - `pnpm prettier --write .` — formatting (Prettier is a devDep; no package script)
 
-There is no unit-test runner. Verification is done with Playwright scripts in `scripts/` that drive a dev server on `localhost:5180` and write screenshots to `/tmp`:
-
-- `node scripts/shot.mjs` — screenshots of float/shelf/popup/radio states
-- `node scripts/flow.mjs` — full flow: item popup → recipe maker → decorate → pin → gallery
-- `node scripts/export-test.mjs`, `node scripts/polish-test.mjs` — export and polish checks
-
-Each script collects console/page errors and prints them at the end — a run is only clean if it reports `console errors: none`.
+There is no unit-test runner, and the former Playwright suite in `scripts/` has been **removed and git-ignored**. Verification is now `pnpm build` (typecheck) + `pnpm lint` + manual/browser checks. You can still drop a throwaway `.mjs` in `scripts/` to drive Playwright (run `pnpm dev --port 5180` first) — it won't be committed. If you do, collect console/page errors and treat the run as clean only when it reports `console errors: none`.
 
 ## Git workflow
 
@@ -45,7 +39,7 @@ Provider stack in `src/App.tsx`: `SettingsProvider → RecipesProvider → Scene
 
 ### Conventions
 
-- Styling is a **Tailwind v4 + CSS Modules hybrid** (migration in progress, module-by-module). Tailwind (CSS-first, wired via `@tailwindcss/vite`) handles layout/spacing/color/typography utilities; the design tokens live as `@theme` in `src/styles/global.css` (colours → `bg-*`/`text-*`/`border-*`, fonts → `font-display`/`font-hand`/`font-script`). **Preflight is intentionally not imported** — `global.css` keeps the project's own base resets, so adopting Tailwind changed nothing visually. The original short token names (`var(--ink)`, `var(--foam)`, …) still resolve via aliases in `global.css`. CSS Modules (`*.module.css`) are retained for bespoke hand-drawn styling (wobble `border-radius`, clip-path jags, `mix-blend-mode`, slider thumbs, `@keyframes`) that doesn't map cleanly to utilities — don't force those into arbitrary-value classes. `src/styles/tokens.ts` still mirrors the palette for SVG fills.
+- Styling is **Tailwind v4** (CSS-first, wired via `@tailwindcss/vite`). The CSS Modules migration is **complete** — there are no `*.module.css` files left; the old per-component modules were all converted to utilities and deleted. Tailwind handles layout/spacing/color/typography; the design tokens live as `@theme` in `src/styles/global.css` (colours → `bg-*`/`text-*`/`border-*`, fonts → `font-display`/`font-hand`/`font-script`). **Preflight is intentionally not imported** — `global.css` keeps the project's own base resets, so adopting Tailwind changed nothing visually. The original short token names (`var(--ink)`, `var(--foam)`, …) still resolve via aliases in `global.css`. Genuinely bespoke hand-drawn styling that doesn't map to utilities (wobble `border-radius`, clip-path jags, `mix-blend-mode`, slider thumbs, `@keyframes`) lives as plain CSS in `global.css` — keep it there rather than forcing arbitrary-value classes or reintroducing CSS Modules. Use the `cn()` helper (`src/lib/cn.ts`, a tiny no-dep clsx) to compose conditional class strings. `src/styles/tokens.ts` still mirrors the palette for SVG fills.
 - Sticker/tape placements store x/y as fractions of the card (0..1) so cards scale anywhere (`src/state/types.ts`).
 - Hooks co-located with their provider (with a documented eslint-disable for react-refresh/only-export-components) is the established idiom in `src/state/`.
-- Interactive elements get descriptive aria-labels (e.g. "v60 dripper — open its card"); the Playwright scripts target them by role/label, so keep labels stable or update the scripts.
+- Interactive elements get descriptive aria-labels (e.g. "v60 dripper — open its card") for accessibility; any throwaway Playwright check targets them by role/label, so keep labels stable (or update the script).

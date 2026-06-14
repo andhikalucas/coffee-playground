@@ -19,12 +19,20 @@ const PAPER_SWATCH =
   'relative h-8.5 w-11 overflow-hidden rounded-[8px_4px_10px_5px/5px_10px_4px_8px] border-[2.2px] border-solid border-ink'
 const PAPER_SWATCH_ACTIVE = 'outline outline-[3px] outline-offset-2 outline-red'
 
+// stickers used to land at full baseSize (scale 1), which read as oversized next
+// to the card's text — especially once the card scales down on phones. Drop new
+// ones in a touch smaller so they sit in proportion with the writing.
+const DEFAULT_DECOR_SCALE = 0.66
+
 interface StickerShelfProps {
   onAdded: (id: string) => void
+  /** fired after a sticker/tape is dropped on the card (ink/paper don't fire it) —
+   *  the mobile picker uses this to close itself so the piece can be placed */
+  onPlaced?: () => void
 }
 
 /** The decoration drawer: stickers, tape, ink, paper. */
-export function StickerShelf({ onAdded }: StickerShelfProps) {
+export function StickerShelf({ onAdded, onPlaced }: StickerShelfProps) {
   const { draft, updateDraft } = useRecipes()
   const play = useSfx()
 
@@ -38,10 +46,11 @@ export function StickerShelf({ onAdded }: StickerShelfProps) {
         x: 0.5 + (Math.random() - 0.5) * 0.14,
         y: 0.5 + (Math.random() - 0.5) * 0.14,
         rotation: Math.round((Math.random() - 0.5) * 28),
-        scale: 1,
+        scale: DEFAULT_DECOR_SCALE,
       }),
     )
     onAdded(id)
+    onPlaced?.()
   }
 
   const addTape = (variant: 0 | 1 | 2) => {
@@ -58,6 +67,7 @@ export function StickerShelf({ onAdded }: StickerShelfProps) {
       }),
     )
     onAdded(id)
+    onPlaced?.()
   }
 
   return (
@@ -84,7 +94,7 @@ export function StickerShelf({ onAdded }: StickerShelfProps) {
         </div>
 
         <span className={SHELF_TITLE}>washi tape</span>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {([0, 1, 2] as const).map((variant) => (
             <button
               key={variant}
@@ -109,7 +119,7 @@ export function StickerShelf({ onAdded }: StickerShelfProps) {
         </div>
 
         <span className={SHELF_TITLE}>ink</span>
-        <div className="flex items-center gap-2" role="radiogroup" aria-label="handwriting ink">
+        <div className="flex flex-wrap items-center gap-2" role="radiogroup" aria-label="handwriting ink">
           {(Object.keys(INKS) as InkColor[]).map((k) => (
             <button
               key={k}
@@ -129,7 +139,7 @@ export function StickerShelf({ onAdded }: StickerShelfProps) {
         </div>
 
         <span className={SHELF_TITLE}>paper</span>
-        <div className="flex items-center gap-2" role="radiogroup" aria-label="card paper">
+        <div className="flex flex-wrap items-center gap-2" role="radiogroup" aria-label="card paper">
           {(Object.keys(PAPERS) as PaperStyle[]).map((p) => (
             <button
               key={p}

@@ -20,7 +20,7 @@ const FOCUS_UNDERLINE = 'focus:outline-none focus:[border-bottom-color:var(--col
 const TITLE_INPUT = `min-w-0 flex-1 [border-bottom:2px_dashed_rgba(42,27,16,0.25)] bg-transparent px-0.5 pb-0.5 font-script text-[2rem] font-bold leading-[1.1] text-[color:var(--card-ink)] placeholder:font-normal placeholder:text-ink-faint ${FOCUS_UNDERLINE}`
 const METHOD_SELECT =
   'mt-1.5 inline-block whitespace-nowrap rotate-[2.4deg] border-0 bg-transparent px-2.5 pt-1.25 pb-1 font-hand text-[0.92rem] uppercase tracking-[0.07em] text-[color:var(--card-ink)] opacity-[0.85] focus:outline-none'
-const ING_AMOUNT = `w-14.5 [border-bottom:2px_dashed_rgba(42,27,16,0.25)] bg-transparent px-0.5 text-right font-script text-[1.32rem] text-[color:var(--card-ink)] ${FOCUS_UNDERLINE}`
+const ING_AMOUNT = `w-14.5 [border-bottom:2px_dashed_rgba(42,27,16,0.25)] bg-transparent px-0.5 text-right font-script text-[1.36rem] text-[color:var(--card-ink)] ${FOCUS_UNDERLINE}`
 const UNIT_BTN =
   'rounded-[10px_4px_12px_5px/5px_12px_4px_10px] border-[1.8px] border-solid border-[color:var(--card-ink)] px-1.75 py-px font-hand text-[0.85rem] text-[color:var(--card-ink)] opacity-80 hover:bg-[rgba(42,27,16,0.07)] hover:opacity-100'
 const KIND_SELECT = `max-w-[110px] [border-bottom:2px_dashed_rgba(42,27,16,0.2)] bg-transparent font-script text-[1.15rem] text-[color:var(--card-ink)] ${FOCUS_UNDERLINE}`
@@ -34,10 +34,10 @@ const PARAM_SELECT =
   'border-0 bg-transparent font-hand text-[0.92rem] text-[color:var(--card-ink)] focus:outline-none'
 const STEP_NUM =
   'mt-0.5 grid h-6.5 w-6.5 flex-none place-items-center rounded-[55%_45%_50%_50%/50%_55%_45%_50%] border-2 border-solid border-[color:var(--card-ink)] font-hand text-[0.92rem] text-[color:var(--card-ink)] [transform:rotate(-3deg)]'
-const STEP_INPUT = `flex-1 resize-none overflow-hidden [border-bottom:2px_dashed_rgba(42,27,16,0.18)] bg-transparent px-0.5 pb-px font-script text-[1.28rem] leading-[1.32] text-[color:var(--card-ink)] ${FOCUS_UNDERLINE}`
+const STEP_INPUT = `flex-1 resize-none overflow-hidden [border-bottom:2px_dashed_rgba(42,27,16,0.18)] bg-transparent px-0.5 pb-px font-script text-[1.36rem] leading-[1.32] text-[color:var(--card-ink)] ${FOCUS_UNDERLINE}`
 const COL_LABEL = 'mb-1.5 font-display text-[0.72rem] uppercase tracking-[0.12em] opacity-[0.6]'
 const ING_LIST = 'm-0 flex list-none flex-col gap-1 p-0'
-const ING_ROW = 'flex items-center gap-1.75 font-script text-[1.32rem] leading-[1.5]'
+const ING_ROW = 'flex items-center gap-1.75 font-script text-[1.36rem] leading-[1.5]'
 
 /** The write-mode face of the card — handwriting you can type into. */
 export function CardEditor() {

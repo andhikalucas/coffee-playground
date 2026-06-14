@@ -35,7 +35,8 @@ export function ItemPopup({ item, onClose }: ItemPopupProps) {
       width={620}
     >
       <PopupRow>
-        <div id={`popup-title-${item.id}`}>
+        {/* keep the heading clear of the pinned ✕ chip in the top-right corner */}
+        <div id={`popup-title-${item.id}`} className="pr-10">
           <PersonaTitle text={item.name} seed={item.id} />
         </div>
       </PopupRow>
@@ -58,7 +59,7 @@ export function ItemPopup({ item, onClose }: ItemPopupProps) {
         </div>
       </PopupRow>
       <PopupRow>
-        <div className="flex items-center gap-4 pt-1">
+        <div className="flex flex-wrap items-center gap-4 pt-1">
           <WobblyButton variant="red" seed={`use-${item.id}`} onClick={useInRecipe}>
             use in a recipe →
           </WobblyButton>

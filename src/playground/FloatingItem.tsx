@@ -32,8 +32,8 @@ export function FloatingItem({ item, field, onOpen }: FloatingItemProps) {
         x: handle.x,
         y: handle.y,
         rotate: handle.rotate,
-        width: handle.size,
-        height: handle.size,
+        width: field.sizeOf(handle),
+        height: field.sizeOf(handle),
         zIndex: hover.hovered ? 6 : 1,
       }}
       drag

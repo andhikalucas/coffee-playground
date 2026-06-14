@@ -78,7 +78,7 @@ export function PersonaPopup({
   )
 
   return createPortal(
-    <div className="fixed inset-0 z-80 grid place-items-center p-7">
+    <div className="fixed inset-0 z-80 grid place-items-center p-7 max-[520px]:p-3">
       <HalftoneBackdrop seed={popupKey} onClick={handleClose} />
       <motion.div
         ref={trapRef}
@@ -118,7 +118,7 @@ export function PersonaPopup({
           animate={{ opacity: 1, transition: { delay: 0.045, duration: 0.1 } }}
         />
         <motion.div
-          className="relative m-4.25 rotate-[-1.2deg] bg-paper px-9 pt-8.5 pb-7.5"
+          className="relative m-4.25 rotate-[-1.2deg] bg-paper px-9 pt-8.5 pb-7.5 max-[520px]:m-2.5 max-[520px]:px-5 max-[520px]:pt-7 max-[520px]:pb-5"
           style={{ clipPath: shapes.content }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { delay: 0.09, duration: 0.12 } }}
@@ -133,8 +133,13 @@ export function PersonaPopup({
               ✕
             </button>
           )}
+          {/* cap the row stack to the viewport (minus the popup's own chrome) and
+              let it scroll internally — on short phones this keeps the title, the
+              ✕, and the action buttons reachable instead of clipped off-screen.
+              The close button lives on the non-scrolling shell above, so it stays
+              pinned while these rows scroll. */}
           <motion.div
-            className="flex flex-col gap-3.5"
+            className="flex max-h-[calc(100dvh-10rem)] flex-col gap-3.5 overflow-y-auto overflow-x-hidden overscroll-contain pr-1 max-[520px]:max-h-[calc(100dvh-6rem)]"
             initial="hidden"
             animate="show"
             variants={{ show: { transition: { staggerChildren: 0.05, delayChildren: 0.18 } } }}
