@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Recipe } from '../state/types'
+import { uid } from '../state/types'
 import { PersonaPopup, PopupRow } from '../components/persona/PersonaPopup'
 import { PersonaTitle } from '../components/persona/PersonaTitle'
 import { WobblyButton } from '../components/handmade/WobblyButton'
@@ -14,11 +15,13 @@ import { useSfx } from '../audio/useSfx'
 interface CardFocusProps {
   recipe: Recipe
   onClose: () => void
+  /** read-only owner recipe: hide edit/delete, offer "remix into my board" */
+  house?: boolean
 }
 
 /** Full-size look at a pinned recipe, with the grown-up buttons. */
-export function CardFocus({ recipe, onClose }: CardFocusProps) {
-  const { editRecipe, deleteRecipe } = useRecipes()
+export function CardFocus({ recipe, onClose, house = false }: CardFocusProps) {
+  const { editRecipe, deleteRecipe, loadDraft } = useRecipes()
   const { goTo } = useScene()
   const play = useSfx()
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -48,6 +51,15 @@ export function CardFocus({ recipe, onClose }: CardFocusProps) {
     downloadRecipeJson(recipe)
     play('ding')
     showToast('saved the recipe as json ♡')
+  }
+
+  // fork a fully-editable local copy with a fresh id (drops the house: prefix),
+  // so the owner's card is untouched and the visitor lands on their own draft
+  const onRemix = () => {
+    loadDraft({ ...recipe, id: uid(), createdAt: Date.now(), updatedAt: Date.now() })
+    showToast('copied to your board — make it yours ♡')
+    onClose()
+    goTo('maker')
   }
 
   const onDelete = () => {
@@ -88,12 +100,20 @@ export function CardFocus({ recipe, onClose }: CardFocusProps) {
           <WobblyButton seed="focus-export-json" variant="paper" onClick={onExportJson}>
             ⤓ save as json
           </WobblyButton>
-          <WobblyButton seed="focus-edit" variant="ink" onClick={onEdit}>
-            ✎ edit this card
-          </WobblyButton>
-          <WobblyButton seed="focus-delete" variant="ghost" onClick={onDelete}>
-            {confirmDelete ? 'really toss it?' : '✕ toss it'}
-          </WobblyButton>
+          {house ? (
+            <WobblyButton seed="focus-remix" variant="ink" onClick={onRemix}>
+              ↻ remix into my board
+            </WobblyButton>
+          ) : (
+            <>
+              <WobblyButton seed="focus-edit" variant="ink" onClick={onEdit}>
+                ✎ edit this card
+              </WobblyButton>
+              <WobblyButton seed="focus-delete" variant="ghost" onClick={onDelete}>
+                {confirmDelete ? 'really toss it?' : '✕ toss it'}
+              </WobblyButton>
+            </>
+          )}
         </div>
       </PopupRow>
     </PersonaPopup>

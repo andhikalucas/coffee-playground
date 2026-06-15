@@ -1,14 +1,17 @@
 import { motion } from 'motion/react'
 import type { Recipe } from '../state/types'
 import { IndexCard } from '../recipe/IndexCard'
+import { StarburstBadge } from '../components/persona/StarburstBadge'
 
 interface PinnedCardProps {
   recipe: Recipe
   onOpen: (id: string) => void
+  /** wear the "lucas' pick" stamp — a read-only, owner-curated house recipe */
+  house?: boolean
 }
 
 /** A recipe pinned to the cork at whatever angle it happened to land. */
-export function PinnedCard({ recipe, onOpen }: PinnedCardProps) {
+export function PinnedCard({ recipe, onOpen, house = false }: PinnedCardProps) {
   return (
     <motion.div
       className="relative w-72.5 cursor-pointer"

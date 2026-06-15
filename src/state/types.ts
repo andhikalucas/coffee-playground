@@ -70,6 +70,15 @@ export interface Recipe {
   updatedAt: number
 }
 
+/**
+ * Owner-curated "house" recipes are loaded from bundled JSON, not the vault.
+ * We tag them with an id prefix instead of a wrapper type so they flow through
+ * every Recipe-typed component unchanged — and can never be accidentally
+ * persisted to or deleted from a visitor's localStorage.
+ */
+export const HOUSE_ID_PREFIX = 'house:'
+export const isHouseRecipe = (r: Recipe): boolean => r.id.startsWith(HOUSE_ID_PREFIX)
+
 /** What a playground item pre-fills into the recipe maker. */
 export interface RecipeSeed {
   method?: BrewMethod

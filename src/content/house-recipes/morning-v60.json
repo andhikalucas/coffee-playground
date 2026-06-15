@@ -1,0 +1,26 @@
+{
+  "title": "lucas' french press",
+  "method": "french-press",
+  "ingredients": [
+    { "id": "coffee", "kind": "coffee", "amount": 16, "unit": "g" },
+    { "id": "water", "kind": "water", "amount": 250, "unit": "ml" }
+  ],
+  "params": { "tempC": 94, "grind": "medium-fine", "timeSec": 180 },
+  "steps": [
+    "bloom with 50g water, give it a swirl, wait 30s",
+    "pour in the rest of the water and wait 4:30",
+    "stir using a spoon and rest for another 4 minutes, removing the top layer of grounds with the spoon",
+    "press the plunger down just above the grounds, pour and serve"
+  ],
+  "decor": {
+    "paper": "lined",
+    "ink": "espresso",
+    "stickers": [
+      { "id": "steam", "stickerId": "steam", "x": 0.82, "y": 0.18, "rotation": -8, "scale": 1 },
+      { "id": "bean", "stickerId": "bean", "x": 0.12, "y": 0.8, "rotation": 14, "scale": 1.1 }
+    ],
+    "tapes": [{ "id": "top", "x": 0.5, "y": 0.03, "rotation": -2, "length": 150, "variant": 1 }]
+  },
+  "createdAt": 0,
+  "updatedAt": 0
+}

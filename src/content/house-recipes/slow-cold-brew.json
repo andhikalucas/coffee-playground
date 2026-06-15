@@ -1,0 +1,25 @@
+{
+  "title": "lucas' cold brew",
+  "method": "cold-brew",
+  "ingredients": [
+    { "id": "coffee", "kind": "coffee", "amount": 25, "unit": "g" },
+    { "id": "water", "kind": "water", "amount": 300, "unit": "ml" }
+  ],
+  "params": { "grind": "coarse", "timeSec": 57600 },
+  "steps": [
+    "coarse grind, stir into room-temp water until fully wet",
+    "steep 24h in the fridge",
+    "serve over ice or add milk"
+  ],
+  "decor": {
+    "paper": "dotted",
+    "ink": "forest",
+    "stickers": [
+      { "id": "sparkle", "stickerId": "sparkle", "x": 0.8, "y": 0.2, "rotation": 0, "scale": 1.1 },
+      { "id": "mug", "stickerId": "mug", "x": 0.15, "y": 0.75, "rotation": -10, "scale": 1 }
+    ],
+    "tapes": [{ "id": "top", "x": 0.7, "y": 0.05, "rotation": 4, "length": 130, "variant": 0 }]
+  },
+  "createdAt": 0,
+  "updatedAt": 0
+}

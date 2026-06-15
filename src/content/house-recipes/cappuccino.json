@@ -1,0 +1,22 @@
+{
+  "title": "lucas' cappuccino",
+  "method": "french-press",
+  "ingredients": [
+    { "id": "coffee", "kind": "coffee", "amount": 30, "unit": "g" },
+    { "id": "water", "kind": "water", "amount": 100, "unit": "ml" }
+  ],
+  "params": { "tempC": 94, "grind": "medium-fine", "timeSec": 180 },
+  "steps": [
+    "for espsresso base: 30s bloom, stir for 30 seconds",
+    "4:30 brew, then immediately plunge and serve the espreso base",
+    "heat 150ml of milk to around 60C, then pour to french press",
+    "pump with the plunger: 3-5 high presses, 20 low presses",
+    "pour the frothed milk over the espresso base (latte art optional)"
+  ],
+  "decor": {
+    "paper": "lined",
+    "ink": "espresso"
+  },
+  "createdAt": 0,
+  "updatedAt": 0
+}
