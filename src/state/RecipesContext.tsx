@@ -12,6 +12,7 @@ interface RecipesValue {
   draft: Recipe
   updateDraft: (mutate: (d: Recipe) => void) => void
   newDraft: () => void
+  loadDraft: (recipe: Recipe) => void
   saveDraft: () => Recipe
   editRecipe: (id: string) => void
   deleteRecipe: (id: string) => void
@@ -51,6 +52,13 @@ export function RecipesProvider({ children }: { children: ReactNode }) {
 
   const newDraft = useCallback(() => {
     setDraft(emptyRecipe())
+  }, [])
+
+  // load a whole recipe (imported JSON, or a forked house recipe) as the draft.
+  // re-normalized so externally-authored objects can't smuggle in bad fields;
+  // keeps the id so saveDraft upserts rather than duplicating.
+  const loadDraft = useCallback((recipe: Recipe) => {
+    setDraft(normalizeRecipe(clone(recipe)) ?? emptyRecipe())
   }, [])
 
   const saveDraft = useCallback((): Recipe => {
@@ -115,8 +123,8 @@ export function RecipesProvider({ children }: { children: ReactNode }) {
   )
 
   const value = useMemo(
-    () => ({ recipes, draft, updateDraft, newDraft, saveDraft, editRecipe, deleteRecipe, applySeed }),
-    [recipes, draft, updateDraft, newDraft, saveDraft, editRecipe, deleteRecipe, applySeed],
+    () => ({ recipes, draft, updateDraft, newDraft, loadDraft, saveDraft, editRecipe, deleteRecipe, applySeed }),
+    [recipes, draft, updateDraft, newDraft, loadDraft, saveDraft, editRecipe, deleteRecipe, applySeed],
   )
 
   return <RecipesContext.Provider value={value}>{children}</RecipesContext.Provider>

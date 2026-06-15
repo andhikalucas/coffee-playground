@@ -6,6 +6,7 @@ import { WobblyButton } from '../components/handmade/WobblyButton'
 import { showToast } from '../components/handmade/toastBus'
 import { IndexCard } from '../recipe/IndexCard'
 import { exportRecipePng } from '../lib/exportPng'
+import { downloadRecipeJson } from '../lib/recipeJson'
 import { useRecipes } from '../state/RecipesContext'
 import { useScene } from '../state/SceneContext'
 import { useSfx } from '../audio/useSfx'
@@ -43,6 +44,12 @@ export function CardFocus({ recipe, onClose }: CardFocusProps) {
     }
   }
 
+  const onExportJson = () => {
+    downloadRecipeJson(recipe)
+    play('ding')
+    showToast('saved the recipe as json ♡')
+  }
+
   const onDelete = () => {
     if (!confirmDelete) {
       setConfirmDelete(true)
@@ -77,6 +84,9 @@ export function CardFocus({ recipe, onClose }: CardFocusProps) {
         <div className="flex flex-wrap items-center gap-3 pt-1.5">
           <WobblyButton seed="focus-export" variant="red" onClick={onExport} disabled={exporting}>
             {exporting ? 'brewing the png…' : '⤓ save as png'}
+          </WobblyButton>
+          <WobblyButton seed="focus-export-json" variant="paper" onClick={onExportJson}>
+            ⤓ save as json
           </WobblyButton>
           <WobblyButton seed="focus-edit" variant="ink" onClick={onEdit}>
             ✎ edit this card

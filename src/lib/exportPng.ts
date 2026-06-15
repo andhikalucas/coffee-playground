@@ -4,12 +4,7 @@ import { flushSync } from 'react-dom'
 import { toPng } from 'html-to-image'
 import type { Recipe } from '../state/types'
 import { IndexCard } from '../recipe/IndexCard'
-
-const slug = (s: string) =>
-  s
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '') || 'untitled-brew'
+import { slug } from './slug'
 
 /**
  * Render the card off-screen at full size (laid out, never display:none),

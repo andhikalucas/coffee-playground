@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import type { ChangeEvent } from 'react'
 import { AnimatePresence } from 'motion/react'
 import { useRecipes } from '../state/RecipesContext'
 import { useElementSize } from '../hooks/useElementSize'
@@ -15,6 +16,7 @@ import { StickerPickerSheet } from './StickerPickerSheet'
 import { showToast } from '../components/handmade/toastBus'
 import { useSfx } from '../audio/useSfx'
 import { flushVault } from '../lib/storage'
+import { parseRecipeJson, readFileAsText } from '../lib/recipeJson'
 
 type Tab = 'write' | 'decorate'
 
@@ -24,13 +26,14 @@ const SHELF_HINT = 'font-hand text-[0.85rem] leading-[1.45] text-ink-faint'
 
 /** Write a recipe on the card, then flip to decorate mode and go wild. */
 export function RecipeMakerScene() {
-  const { draft, saveDraft, newDraft, updateDraft } = useRecipes()
+  const { draft, saveDraft, newDraft, updateDraft, loadDraft } = useRecipes()
   const { goTo } = useScene()
   const play = useSfx()
   const [tab, setTab] = useState<Tab>('write')
   const [selectedDecor, setSelectedDecor] = useState<string | null>(null)
   const [pickerOpen, setPickerOpen] = useState(false)
   const cardRef = useRef<HTMLDivElement | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   // On phones the inline decoration drawer ate more than half the screen and
   // crowded the recipe, so there it collapses to a button that opens the drawer
@@ -59,6 +62,21 @@ export function RecipeMakerScene() {
     newDraft()
     setSelectedDecor(null)
     showToast('fresh card!')
+  }
+
+  const onImportFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = '' // reset so picking the same file again still fires onChange
+    if (!file) return
+    const parsed = parseRecipeJson(await readFileAsText(file))
+    if (!parsed) {
+      showToast("that file didn't look like a recipe")
+      return
+    }
+    loadDraft(parsed)
+    setTab('write')
+    play('ding')
+    showToast('loaded — tweak and pin it ♡')
   }
 
   return (
@@ -163,6 +181,21 @@ export function RecipeMakerScene() {
           <WobblyButton seed="start-over" variant="ghost" onClick={startOver}>
             fresh card
           </WobblyButton>
+          <WobblyButton
+            seed="import-json"
+            variant="paper"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            ⇪ import a recipe
+          </WobblyButton>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            aria-label="import a recipe from a json file"
+            className="hidden"
+            onChange={onImportFile}
+          />
         </div>
       </aside>
 
