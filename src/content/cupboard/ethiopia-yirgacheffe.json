@@ -1,0 +1,15 @@
+{
+  "name": "yirgacheffe",
+  "roaster": "april",
+  "origin": "ethiopia · gedeo",
+  "process": "washed",
+  "roastLevel": 2,
+  "tastingNotes": ["jasmine", "bergamot", "lemon", "black tea"],
+  "rating": 4.5,
+  "brewMethods": ["v60"],
+  "status": "want-again",
+  "blurb": "tea-like and floral — the one that made me buy a gooseneck kettle.",
+  "boughtAt": "feb 2026",
+  "price": "£11 / 250g",
+  "recipeId": "house:morning-v60"
+}

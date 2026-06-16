@@ -17,19 +17,20 @@ import {
  * are dropped instead of crashing the render, numbers are definanced.
  */
 
-const num = (v: unknown, fallback: number, min: number, max: number): number =>
+// these primitives are shared with the cupboard's normalizeBean (src/cupboard/normalize.ts)
+export const num = (v: unknown, fallback: number, min: number, max: number): number =>
   typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback
 
 const optNum = (v: unknown, min: number, max: number): number | undefined =>
   typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : undefined
 
-const str = (v: unknown, fallback: string, maxLen: number): string =>
+export const str = (v: unknown, fallback: string, maxLen: number): string =>
   typeof v === 'string' ? v.slice(0, maxLen) : fallback
 
-const oneOf = <T extends string>(v: unknown, values: readonly T[], fallback: T): T =>
+export const oneOf = <T extends string>(v: unknown, values: readonly T[], fallback: T): T =>
   typeof v === 'string' && (values as readonly string[]).includes(v) ? (v as T) : fallback
 
-const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null
+export const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null
 
 function normalizeIngredient(u: unknown): RecipeIngredient | null {
   if (!isObj(u)) return null

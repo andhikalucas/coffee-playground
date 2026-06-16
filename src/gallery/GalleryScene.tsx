@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence } from 'motion/react'
 import { useRecipes } from '../state/RecipesContext'
 import { useScene } from '../state/SceneContext'
 import { isHouseRecipe } from '../state/types'
 import { HOUSE_RECIPES } from '../content/houseRecipes'
+import { setBoardFocusListener } from './focusBus'
 import { PinnedCard } from './PinnedCard'
 import { CardFocus } from './CardFocus'
 import { WobblyButton } from '../components/handmade/WobblyButton'
@@ -28,6 +29,15 @@ export function GalleryScene() {
   const { goTo } = useScene()
   const [focusedId, setFocusedId] = useState<string | null>(null)
   const [filter, setFilter] = useState<BoardFilter>('house')
+
+  // let another scene (the cupboard's recipe cross-link) open a card here
+  useEffect(() => {
+    setBoardFocusListener((id) => {
+      setFocusedId(id)
+      setFilter('all')
+    })
+    return () => setBoardFocusListener(null)
+  }, [])
 
   const house = HOUSE_RECIPES
   const focused = [...house, ...recipes].find((r) => r.id === focusedId) ?? null
@@ -63,7 +73,7 @@ export function GalleryScene() {
             {house.length > 0 ? (
               <div className={GRID}>
                 {house.map((recipe) => (
-                  <PinnedCard key={recipe.id} recipe={recipe} onOpen={setFocusedId} house />
+                  <PinnedCard key={recipe.id} recipe={recipe} onOpen={setFocusedId} />
                 ))}
               </div>
             ) : (

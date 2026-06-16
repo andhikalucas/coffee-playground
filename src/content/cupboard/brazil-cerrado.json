@@ -1,0 +1,14 @@
+{
+  "name": "cerrado",
+  "roaster": "ozone",
+  "origin": "brazil · cerrado mineiro",
+  "process": "natural",
+  "roastLevel": 4,
+  "tastingNotes": ["peanut", "dark chocolate", "brown sugar"],
+  "rating": 3.5,
+  "brewMethods": ["espresso", "moka"],
+  "status": "finished",
+  "blurb": "low-acid and nutty — pulled great shots, vanished fast.",
+  "boughtAt": "jan 2026",
+  "price": "£8 / 250g"
+}

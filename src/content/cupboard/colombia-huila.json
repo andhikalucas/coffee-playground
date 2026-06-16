@@ -1,0 +1,15 @@
+{
+  "name": "huila",
+  "roaster": "cartwheel",
+  "origin": "colombia · huila",
+  "process": "washed",
+  "roastLevel": 3,
+  "tastingNotes": ["milk chocolate", "caramel", "red apple"],
+  "rating": 4,
+  "brewMethods": ["moka", "v60"],
+  "status": "in-the-cupboard",
+  "blurb": "the reliable everyday bag — sweet, round, never sour.",
+  "boughtAt": "may 2026",
+  "price": "£9.50 / 250g",
+  "recipeId": "house:weekend-moka"
+}

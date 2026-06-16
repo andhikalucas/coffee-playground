@@ -10,6 +10,7 @@ import { SceneTransition } from './components/SceneTransition'
 import { PlaygroundScene } from './playground/PlaygroundScene'
 import { RecipeMakerScene } from './recipe/RecipeMakerScene'
 import { GalleryScene } from './gallery/GalleryScene'
+import { CupboardScene } from './cupboard/CupboardScene'
 import { cn } from './lib/cn'
 
 /** Wait for the hand-written fonts so nothing flashes Times New Roman. */
@@ -63,6 +64,7 @@ export function AppShell() {
         {scene === 'playground' && <PlaygroundScene />}
         {scene === 'maker' && <RecipeMakerScene />}
         {scene === 'gallery' && <GalleryScene />}
+        {scene === 'cupboard' && <CupboardScene />}
       </main>
 
       <Hud />

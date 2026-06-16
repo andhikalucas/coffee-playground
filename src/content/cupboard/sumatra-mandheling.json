@@ -1,0 +1,15 @@
+{
+  "name": "mandheling",
+  "roaster": "has bean",
+  "origin": "indonesia · sumatra",
+  "process": "wet-hulled",
+  "roastLevel": 5,
+  "tastingNotes": ["cedar", "tobacco", "dark cocoa", "earthy"],
+  "rating": 3,
+  "brewMethods": ["cold-brew", "moka"],
+  "status": "finished",
+  "blurb": "big, savoury and syrupy — made a cracking cold brew, a bit much hot.",
+  "boughtAt": "dec 2025",
+  "price": "£10 / 250g",
+  "recipeId": "house:slow-cold-brew"
+}

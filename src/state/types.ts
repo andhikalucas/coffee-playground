@@ -1,4 +1,4 @@
-export type SceneId = 'playground' | 'maker' | 'gallery'
+export type SceneId = 'playground' | 'maker' | 'gallery' | 'cupboard'
 
 /* value lists double as runtime validators for data coming out of localStorage */
 export const BREW_METHODS = ['v60', 'espresso', 'moka', 'french-press', 'cold-brew'] as const

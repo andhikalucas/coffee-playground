@@ -11,6 +11,7 @@ const TABS: Array<{ id: SceneId; label: string }> = [
   { id: 'playground', label: 'playground' },
   { id: 'maker', label: 'make a recipe' },
   { id: 'gallery', label: 'the board' },
+  { id: 'cupboard', label: 'the cupboard' },
 ]
 
 // at ≤1024px the three tabs drop to a centred bar at the bottom edge (full size,
@@ -24,6 +25,7 @@ const TAB_BG = [
   { off: 'bg-caramel/55 mix-blend-multiply', on: 'bg-caramel/95' },
   { off: 'bg-caramel-soft/55 mix-blend-multiply', on: 'bg-caramel-soft/95' },
   { off: 'bg-kraft/60 mix-blend-multiply', on: 'bg-kraft/98' },
+  { off: 'bg-kraft-deep/58 mix-blend-multiply', on: 'bg-kraft-deep/95' },
 ]
 
 /** Three washi-tape tabs hanging off the top edge. */
